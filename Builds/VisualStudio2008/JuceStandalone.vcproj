@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<VisualStudioProject ProjectType="Visual C++"
+                     Version="9.00"
+                     Name="JuceStandalone"
+                     ProjectGUID="{C86F777B-D7DB-9C42-4ED1-AB65C8D48862}"
+                     TargetFrameworkVersion="131072">
+  <Platforms>
+    <Platform Name="Win32"/>
+  </Platforms>
+  <ToolFiles/>
+  <Configurations>
+    <Configuration Name="Debug&#124;Win32"
+                   OutputDirectory=".\Debug"
+                   IntermediateDirectory=".\Debug"
+                   ConfigurationType="1"
+                   UseOfMFC="0"
+                   ATLMinimizesCRunTimeLibraryUsage="false"
+                   CharacterSet="2">
+      <Tool Name="VCPreBuildEventTool"/>
+      <Tool Name="VCCustomBuildTool"/>
+      <Tool Name="VCXMLDataGeneratorTool"/>
+      <Tool Name="VCWebServiceProxyGeneratorTool"/>
+      <Tool Name="VCMIDLTool"
+            PreprocessorDefinitions="_DEBUG"
+            MkTypLibCompatible="true"
+            SuppressStartupBanner="true"
+            TargetEnvironment="1"
+            TypeLibraryName=".\Debug\JuceStandalone.tlb"
+            HeaderFileName=""/>
+      <Tool Name="VCCLCompilerTool"
+            Optimization="0"
+            BufferSecurityCheck=""
+            DebugInformationFormat="4"
+            AdditionalIncludeDirectories=""
+            PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
+            RuntimeLibrary="1"
+            RuntimeTypeInfo="true"
+            UsePrecompiledHeader="0"
+            PrecompiledHeaderFile=".\Debug\JuceStandalone.pch"
+            AssemblerListingLocation=".\Debug\"
+            ObjectFile=".\Debug\"
+            ProgramDataBaseFileName=".\Debug\"
+            WarningLevel="3"
+            SuppressStartupBanner="true"/>
+      <Tool Name="VCManagedResourceCompilerTool"/>
+      <Tool Name="VCResourceCompilerTool"
+            PreprocessorDefinitions="_DEBUG"/>
+      <Tool Name="VCPreLinkEventTool"/>
+      <Tool Name="VCLinkerTool"
+            OutputFile=".\Debug\JuceStandalone.exe"
+            SuppressStartupBanner="true"
+            IgnoreDefaultLibraryNames="libcmt.lib, msvcrt.lib"
+            GenerateDebugInformation="true"
+            ProgramDatabaseFile=".\Debug\JuceStandalone.pdb"
+            SubSystem="2"
+            RandomizedBaseAddress="1"
+            DataExecutionPrevention="0"
+            TargetMachine="1"/>
+      <Tool Name="VCALinkTool"/>
+      <Tool Name="VCManifestTool"/>
+      <Tool Name="VCXDCMakeTool"/>
+      <Tool Name="VCBscMakeTool"
+            SuppressStartupBanner="true"
+            OutputFile=".\Debug\JuceStandalone.bsc"/>
+      <Tool Name="VCFxCopTool"/>
+      <Tool Name="VCAppVerifierTool"/>
+      <Tool Name="VCPostBuildEventTool"/>
+    </Configuration>
+    <Configuration Name="Release&#124;Win32"
+                   OutputDirectory=".\Release"
+                   IntermediateDirectory=".\Release"
+                   ConfigurationType="1"
+                   UseOfMFC="0"
+                   ATLMinimizesCRunTimeLibraryUsage="false"
+                   CharacterSet="2"
+                   WholeProgramOptimization="1">
+      <Tool Name="VCPreBuildEventTool"/>
+      <Tool Name="VCCustomBuildTool"/>
+      <Tool Name="VCXMLDataGeneratorTool"/>
+      <Tool Name="VCWebServiceProxyGeneratorTool"/>
+      <Tool Name="VCMIDLTool"
+            PreprocessorDefinitions="NDEBUG"
+            MkTypLibCompatible="true"
+            SuppressStartupBanner="true"
+            TargetEnvironment="1"
+            TypeLibraryName=".\Release\JuceStandalone.tlb"
+            HeaderFileName=""/>
+      <Tool Name="VCCLCompilerTool"
+            Optimization="2"
+            InlineFunctionExpansion="1"
+            StringPooling="true"
+            AdditionalIncludeDirectories=""
+            PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
+            RuntimeLibrary="0"
+            RuntimeTypeInfo="true"
+            UsePrecompiledHeader="0"
+            PrecompiledHeaderFile=".\Release\JuceStandalone.pch"
+            AssemblerListingLocation=".\Release\"
+            ObjectFile=".\Release\"
+            ProgramDataBaseFileName=".\Release\"
+            WarningLevel="3"
+            SuppressStartupBanner="true"/>
+      <Tool Name="VCManagedResourceCompilerTool"/>
+      <Tool Name="VCResourceCompilerTool"
+            PreprocessorDefinitions="NDEBUG"/>
+      <Tool Name="VCPreLinkEventTool"/>
+      <Tool Name="VCLinkerTool"
+            OutputFile=".\Release\JuceStandalone.exe"
+            SuppressStartupBanner="true"
+            IgnoreDefaultLibraryNames=""
+            GenerateDebugInformation="false"
+            ProgramDatabaseFile=".\Release\JuceStandalone.pdb"
+            SubSystem="2"
+            GenerateManifest="false"
+            OptimizeReferences="2"
+            EnableCOMDATFolding="2"
+            RandomizedBaseAddress="1"
+            DataExecutionPrevention="0"
+            TargetMachine="1"/>
+      <Tool Name="VCALinkTool"/>
+      <Tool Name="VCManifestTool"/>
+      <Tool Name="VCXDCMakeTool"/>
+      <Tool Name="VCBscMakeTool"
+            SuppressStartupBanner="true"
+            OutputFile=".\Release\JuceStandalone.bsc"/>
+      <Tool Name="VCFxCopTool"/>
+      <Tool Name="VCAppVerifierTool"/>
+      <Tool Name="VCPostBuildEventTool"/>
+    </Configuration>
+  </Configurations>
+  <References/>
+  <Files>
+    <Filter Name="JuceStandalone">
+      <Filter Name="Source">
+        <File RelativePath="..\..\Source\MainWindow.cpp"/>
+        <File RelativePath="..\..\Source\MainWindow.h"/>
+        <File RelativePath="..\..\Source\Main.cpp"/>
+      </Filter>
+    </Filter>
+    <Filter Name="Juce Library Code">
+      <File RelativePath="..\..\JuceLibraryCode\AppConfig.h"/>
+      <File RelativePath="..\..\JuceLibraryCode\JuceHeader.h"/>
+      <File RelativePath="..\..\JuceLibraryCode\JuceLibraryCode1.cpp"/>
+      <File RelativePath="..\..\JuceLibraryCode\JuceLibraryCode2.cpp"/>
+      <File RelativePath="..\..\JuceLibraryCode\JuceLibraryCode3.cpp"/>
+      <File RelativePath="..\..\JuceLibraryCode\JuceLibraryCode4.cpp"/>
+    </Filter>
+  </Files>
+  <Globals/>
+</VisualStudioProject>

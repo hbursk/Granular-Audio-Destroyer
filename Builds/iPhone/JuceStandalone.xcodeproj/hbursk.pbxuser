@@ -1,0 +1,231 @@
+// !$*UTF8*$!
+{
+	0E424EEED413A6A6D8392597 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = CA0B60BC12A832D100F43A20 /* JuceStandalone-iPad */;
+		activeTarget = CA0B60A712A832D100F43A20 /* JuceStandalone-iPad */;
+		addToTargets = (
+			13A8BC95E3FD88B47D43FF40 /* JuceStandalone */,
+		);
+		codeSenseManager = CAC0F89312A620C000CF2606 /* Code sense */;
+		executables = (
+			CAC0F88312A6205D00CF2606 /* JuceStandalone */,
+			CA0B60BC12A832D100F43A20 /* JuceStandalone-iPad */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					509,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					469,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 313012593;
+			PBXWorkspaceStateSaveDate = 313012593;
+		};
+		perUserProjectItems = {
+			CA0B608412A831AB00F43A20 /* PBXTextBookmark */ = CA0B608412A831AB00F43A20 /* PBXTextBookmark */;
+			CA0B60C312A8332200F43A20 /* PBXTextBookmark */ = CA0B60C312A8332200F43A20 /* PBXTextBookmark */;
+			CA0B60E312A8DAD600F43A20 /* PBXTextBookmark */ = CA0B60E312A8DAD600F43A20 /* PBXTextBookmark */;
+			CA0B60E412A8DAD600F43A20 /* PlistBookmark */ = CA0B60E412A8DAD600F43A20 /* PlistBookmark */;
+			CA0B60E512A8DAD600F43A20 /* PlistBookmark */ = CA0B60E512A8DAD600F43A20 /* PlistBookmark */;
+		};
+		sourceControlManager = CAC0F89212A620C000CF2606 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	13A8BC95E3FD88B47D43FF40 /* JuceStandalone */ = {
+		activeExec = 0;
+		executables = (
+			CAC0F88312A6205D00CF2606 /* JuceStandalone */,
+		);
+	};
+	5E9F90F9935E2AC2F8F0B965 /* JuceLibraryCode3.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {593, 208}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 276}";
+		};
+	};
+	C8B25CE4CD6412D0435D28CF /* MainWindow.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {687, 481}}";
+			sepNavSelRange = "{783, 0}";
+			sepNavVisRange = "{349, 649}";
+		};
+	};
+	CA0B607F12A8318D00F43A20 /* MainComponent.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {687, 3120}}";
+			sepNavSelRange = "{1764, 0}";
+			sepNavVisRange = "{993, 775}";
+		};
+	};
+	CA0B608412A831AB00F43A20 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5E9F90F9935E2AC2F8F0B965 /* JuceLibraryCode3.mm */;
+		name = "JuceLibraryCode3.mm: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 276;
+		vrLoc = 0;
+	};
+	CA0B60A712A832D100F43A20 /* JuceStandalone-iPad */ = {
+		activeExec = 0;
+		executables = (
+			CA0B60BC12A832D100F43A20 /* JuceStandalone-iPad */,
+		);
+	};
+	CA0B60BC12A832D100F43A20 /* JuceStandalone-iPad */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = "JuceStandalone-iPad";
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	CA0B60C312A8332200F43A20 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = C8B25CE4CD6412D0435D28CF /* MainWindow.cpp */;
+		name = "MainWindow.cpp: 23";
+		rLen = 0;
+		rLoc = 783;
+		rType = 0;
+		vrLen = 649;
+		vrLoc = 349;
+	};
+	CA0B60E312A8DAD600F43A20 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = CA0B607F12A8318D00F43A20 /* MainComponent.cpp */;
+		name = "MainComponent.cpp: 53";
+		rLen = 0;
+		rLoc = 1764;
+		rType = 0;
+		vrLen = 775;
+		vrLoc = 993;
+	};
+	CA0B60E412A8DAD600F43A20 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 2BDA10292ED260F46CF5FFEA /* Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			CFBundleIconFile,
+		);
+		name = /Users/hbursk/Desktop/JuceProjectTest/Builds/iPhone/Info.plist;
+		rLen = 0;
+		rLoc = 0;
+	};
+	CA0B60E512A8DAD600F43A20 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 2BDA10292ED260F46CF5FFEA /* Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			UIInterfaceOrientation,
+		);
+		name = /Users/hbursk/Desktop/JuceProjectTest/Builds/iPhone/Info.plist;
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
+	CAC0F88312A6205D00CF2606 /* JuceStandalone */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = JuceStandalone;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	CAC0F89212A620C000CF2606 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	CAC0F89312A620C000CF2606 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}

@@ -1,0 +1,20 @@
+
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8D6B8D34-98A0-D936-2863-2356809E6101}") = "JuceStandalone", "JuceStandalone.vcproj", "{C86F777B-D7DB-9C42-4ED1-AB65C8D48862}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C86F777B-D7DB-9C42-4ED1-AB65C8D48862}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C86F777B-D7DB-9C42-4ED1-AB65C8D48862}.Debug|Win32.Build.0 = Debug|Win32
+		{C86F777B-D7DB-9C42-4ED1-AB65C8D48862}.Release|Win32.ActiveCfg = Release|Win32
+		{C86F777B-D7DB-9C42-4ED1-AB65C8D48862}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
