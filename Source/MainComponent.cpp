@@ -26,12 +26,16 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+const int kGrainLength = 44100/8;
+const float kVelocityFactor = 2.0f;
+const int kGrainAdvanceAmount = kGrainLength/2;
 //[/MiscUserDefs]
 
 //==============================================================================
 MainComponent::MainComponent ()
     : mOpenFileButton (0),
       mSaveFileButton (0),
+	  mPlayButton(0),
 	  mCurrentAudioFileSource(0),
 	  mInterleavedBuffer(0),
 	  mLeftBuffer(0),
@@ -44,6 +48,10 @@ MainComponent::MainComponent ()
     addAndMakeVisible (mSaveFileButton = new TextButton (T("SaveFileButton")));
     mSaveFileButton->setButtonText (T("Save File"));
     mSaveFileButton->addButtonListener (this);
+	
+	addAndMakeVisible (mPlayButton = new TextButton (T("PlayButton")));
+    mPlayButton->setButtonText (T("Play"));
+    mPlayButton->addButtonListener (this);
 
 
     //[UserPreSize]
@@ -58,13 +66,13 @@ MainComponent::MainComponent ()
 
     //[Constructor] You can add your own custom stuff here..
 	//setup Grain variables for testing
-	mGrainLength = 44100/8;	//smaller value is smaller grain lengths and less recognizable sounds
+	mGrainLength = kGrainLength;	//smaller value is smaller grain lengths and less recognizable sounds
 	mGrainCurrentPositionRelativeLeft = 0;
 	mGrainCurrentPositionRelativeRight = 0;
 	mGrainStartPositionAbsolute = 0;
 	mSampleCounter = 0;
-	mVelocityFactor = 2.0f;	//higher is slower moving through audio file
-	mGrainAdvanceAmount = mGrainLength/2;//how many samples the window will advance through the audio file
+	mVelocityFactor = kVelocityFactor;	//higher is slower moving through audio file
+	mGrainAdvanceAmount = kGrainAdvanceAmount;//how many samples the window will advance through the audio file
     //[/Constructor]
 }
 
@@ -114,6 +122,7 @@ void MainComponent::resized()
 {
     mOpenFileButton->setBounds (24, 272, 150, 24);
     mSaveFileButton->setBounds (216, 272, 150, 24);
+	mPlayButton->setBounds (430, 272, 150, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -141,7 +150,6 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
         if (dialogBox.show())
         {
             File mCurrentFile = browser.getSelectedFile(0);
-			//playAudioFile(mCurrentFile);
 			memStoreAudioFile(mCurrentFile);
 			mDeviceManager.addAudioCallback(this);
         }
@@ -151,8 +159,34 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSaveFileButton)
     {
         //[UserButtonCode_mSaveFileButton] -- add your button handler code here..
+		if (mLeftBuffer == 0)
+			return;
+		WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
+
+        FileBrowserComponent browser (FileBrowserComponent::saveMode | FileBrowserComponent::canSelectFiles,
+                                      File::nonexistent,
+                                      &wildcardFilter,
+                                      0);
+
+        FileChooserDialogBox dialogBox ("Save a Wave File",
+                                        "Please choose a Wave file to save...",
+                                        browser, true,
+                                        Colours::lightblue);
+
+        if (dialogBox.show())
+        {
+            File savefile = browser.getSelectedFile(0);
+			saveAudioFile(savefile);		
+        }
+       
         //[/UserButtonCode_mSaveFileButton]
     }
+	else if (buttonThatWasClicked == mPlayButton)
+	{
+		//[UserButtonCode_mPlayButton] -- add your button handler code here..
+		playPressed();
+		//[/UserButtonCode_mPlayButton]
+	}
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -204,19 +238,48 @@ void MainComponent::memStoreAudioFile(File &audioFile)
 
 void MainComponent::saveAudioFile(File &saveFile)
 {
+	if (mLeftBuffer == 0) //nothing ever loaded, quit here
+		return;
+	resetAudioRenderer();	
 	int num = 1;
 	if (mRightBuffer != 0)
 		num++;
-	int* destBufs[num];
-	destBufs[0] = (int*)mLeftBuffer;
-	if (mRightBuffer)
-		destBufs[1] = (int*)mRightBuffer;
+	float *leftOutputBuffer = (float*)malloc(1024*sizeof(float));
+	float *rightOutputBuffer = (float*)malloc(1024*sizeof(float));;
+	float* destBufs[num];
+	destBufs[0] = leftOutputBuffer;
+	if (num>1)
+	{
+		destBufs[1] = rightOutputBuffer;
+	}
 	
 	saveFile.deleteFile();
 	OutputStream *output = saveFile.createOutputStream();
 	WavAudioFormat wavformat;
 	AudioFormatWriter *writer = wavformat.createWriterFor(output, 44100.0, num, 16, StringPairArray(), 0);
-	writer->write((const int**)destBufs, mBufferLength);
+	
+	int *destIntBufs[num];
+	int *leftIntBuffer = (int*)malloc(1024*sizeof(int));
+	int *rightIntBuffer = (int*)malloc(1024*sizeof(int));
+	destIntBufs[0] = leftIntBuffer;
+	if (num>1)
+	{
+		destIntBufs[1] = rightIntBuffer;
+	}
+	while (!renderAudioToBuffer(destBufs, num, 1024))
+	{
+		for (int j=0; j<1024; j++)
+		{
+			leftIntBuffer[j] = (int)(leftOutputBuffer[j] * INT_MAX);
+			rightIntBuffer[j] = (int)(rightOutputBuffer[j] * INT_MAX);
+		}
+		writer->write((const int**)destIntBufs, 1024);
+	}
+	
+	free(leftOutputBuffer);
+	free(rightOutputBuffer);
+	free(leftIntBuffer);
+	free(rightIntBuffer);
 	delete writer;	
 }
 
@@ -244,6 +307,37 @@ void MainComponent::playAudioFile(File &audioFile)
 		mTransportSource.setPosition (0);
 		mTransportSource.start();
     }
+}
+
+void MainComponent::playPressed()
+{
+	if (mLeftBuffer == 0)
+		return;
+	if (mPlaying)
+	{
+		mDeviceManager.removeAudioCallback(this);
+		mPlaying = false;
+		mPlayButton->setButtonText(T("Play"));
+		resetAudioRenderer();
+	}
+	else
+	{
+		resetAudioRenderer();
+		mDeviceManager.addAudioCallback(this);
+		mPlaying = true;
+		mPlayButton->setButtonText(T("Stop"));
+	}
+}
+
+void MainComponent::resetAudioRenderer()
+{
+	mGrainLength = kGrainLength;	//smaller value is smaller grain lengths and less recognizable sounds
+	mGrainCurrentPositionRelativeLeft = 0;
+	mGrainCurrentPositionRelativeRight = 0;
+	mGrainStartPositionAbsolute = 0;
+	mSampleCounter = 0;
+	mVelocityFactor = kVelocityFactor;	//higher is slower moving through audio file
+	mGrainAdvanceAmount = kGrainAdvanceAmount;//how many samples the window will advance through the audio file
 }
 
 void MainComponent::audioDeviceAboutToStart (AudioIODevice* device)

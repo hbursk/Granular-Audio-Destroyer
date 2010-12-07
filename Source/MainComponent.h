@@ -52,6 +52,8 @@ public:
 	void playAudioFile(File &audioFile);
 	void memStoreAudioFile(File &audioFile);
 	void saveAudioFile(File &saveFile);
+	void playPressed();
+	void resetAudioRenderer();
 	bool renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples);
 
     //[/UserMethods]
@@ -98,11 +100,13 @@ private:
 	int64 mSampleCounter;
 	float mVelocityFactor;
 	int64 mGrainAdvanceAmount;
+	bool  mPlaying;
     //[/UserVariables]
 
     //==============================================================================
     TextButton* mOpenFileButton;
     TextButton* mSaveFileButton;
+	TextButton* mPlayButton;
 	
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)
