@@ -26,9 +26,9 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
-const int kGrainLength = 44100/8;
-const float kVelocityFactor = 2.0f;
-const int kGrainAdvanceAmount = kGrainLength/2;
+const int kGrainLength = 44100;
+const float kVelocityFactor = 1.0f;
+const int kGrainAdvanceAmount = kGrainLength/3.0;
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -134,7 +134,14 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
 
     if (buttonThatWasClicked == mOpenFileButton)
     {
-		 //[UserButtonCode_mOpenFileButton] -- add your button handler code here..
+		//[UserButtonCode_mOpenFileButton] -- add your button handler code here..
+
+		if (mPlaying)
+		{
+			mPlaying = false;
+			mPlayButton->setButtonText(T("Play"));
+			mDeviceManager.removeAudioCallback(this);
+		}
 		WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
 
         FileBrowserComponent browser (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles,
@@ -151,14 +158,21 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
         {
             File mCurrentFile = browser.getSelectedFile(0);
 			memStoreAudioFile(mCurrentFile);
-			mDeviceManager.addAudioCallback(this);
+			//mDeviceManager.addAudioCallback(this);
         }
        
         //[/UserButtonCode_mOpenFileButton]
     }
     else if (buttonThatWasClicked == mSaveFileButton)
     {
-        //[UserButtonCode_mSaveFileButton] -- add your button handler code here..
+		//[UserButtonCode_mSaveFileButton] -- add your button handler code here..
+
+		if (mPlaying)
+		{
+			mPlaying = false;
+			mPlayButton->setButtonText(T("Play"));
+			mDeviceManager.removeAudioCallback(this);
+		}
 		if (mLeftBuffer == 0)
 			return;
 		WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
@@ -362,6 +376,8 @@ void MainComponent::audioDeviceIOCallback (const float** inputChannelData, int n
 	if (renderAudioToBuffer(outputChannelData, numOutputChannels, numSamples))
 	{
 		mDeviceManager.removeAudioCallback(this);
+		//mPlayButton->setButtonText(T("Play"));
+		mPlaying = false;
 	}
 }
 
