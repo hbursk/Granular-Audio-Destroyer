@@ -1,0 +1,8 @@
+This is based on a ChucK project created by Baek San Chang of Haek Bayden/White Mountain fame.  His ChucK project was a lovely six channel granular playback engine of an audio file with variable grain size, speed, randomness, pitch, and effects.
+
+This project attempts to recreate that ChucK project in a standalone desktop version that can mangle and manipulate audio offline.  
+
+It's also useful as an exploration into the Juce Framework by rawmaterialsoftware.com
+
+This project requires Juce 1.51 available for download from www.rawmaterialsoftware.com
+
