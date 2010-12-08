@@ -24,9 +24,10 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "GranularSlice.h"
 //[/Headers]
 
-
+#define NUM_GRAINS 6
 
 //==============================================================================
 /**
@@ -54,6 +55,7 @@ public:
 	void saveAudioFile(File &saveFile);
 	void playPressed();
 	void resetAudioRenderer();
+	void setupGranularSlices();
 	bool renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples);
 
     //[/UserMethods]
@@ -101,6 +103,8 @@ private:
 	float mVelocityFactor;
 	int64 mGrainAdvanceAmount;
 	bool  mPlaying;
+	GranularSlice *mGranularSlices[NUM_GRAINS];
+	
     //[/UserVariables]
 
     //==============================================================================

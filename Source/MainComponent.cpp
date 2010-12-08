@@ -26,9 +26,6 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
-const int kGrainLength = 44100;
-const float kVelocityFactor = 1.0f;
-const int kGrainAdvanceAmount = kGrainLength/3.0;
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -66,13 +63,11 @@ MainComponent::MainComponent ()
 
     //[Constructor] You can add your own custom stuff here..
 	//setup Grain variables for testing
-	mGrainLength = kGrainLength;	//smaller value is smaller grain lengths and less recognizable sounds
-	mGrainCurrentPositionRelativeLeft = 0;
-	mGrainCurrentPositionRelativeRight = 0;
-	mGrainStartPositionAbsolute = 0;
-	mSampleCounter = 0;
-	mVelocityFactor = kVelocityFactor;	//higher is slower moving through audio file
-	mGrainAdvanceAmount = kGrainAdvanceAmount;//how many samples the window will advance through the audio file
+	
+	for (int i=0; i< NUM_GRAINS; i++)
+	{
+		mGranularSlices[i] = 0;
+	}
     //[/Constructor]
 }
 
@@ -102,6 +97,15 @@ MainComponent::~MainComponent()
 	{
 		free(mRightBuffer);
 		mRightBuffer = 0;
+	}
+	
+	for (int i=0; i< NUM_GRAINS; i++)
+	{
+		if (mGranularSlices[i] != 0)
+		{
+			delete mGranularSlices[i];
+			mGranularSlices[i] = 0;
+		}
 	}
     //[/Destructor]
 }
@@ -247,6 +251,27 @@ void MainComponent::memStoreAudioFile(File &audioFile)
 				mRightBuffer[i] = ((float)destBufs[1][i])/(1.0f*INT_MAX);
 		}
 		delete reader;
+		
+		setupGranularSlices();
+	}
+}
+
+void MainComponent::setupGranularSlices()
+{
+	for (int i=0; i< NUM_GRAINS; i++)
+	{
+		if (mGranularSlices[i] != 0)
+		{
+			delete mGranularSlices[i];
+			mGranularSlices[i] = 0;
+		}
+		mGranularSlices[i] = new GranularSlice(mLeftBuffer, mRightBuffer, mBufferLength, mNumChannels);
+		//experimental settings here - will be controllable via GUI instead in the future
+		mGranularSlices[i]->setPan(1.0f*i/(1.0f*NUM_GRAINS));
+		mGranularSlices[i]->setGrainLength(i*(44100/4));
+		mGranularSlices[i]->setGrainStartPosition(i*22050);
+		mGranularSlices[i]->setVelocity(1.0f*i*0.25f);
+		mGranularSlices[i]->setGrainAdvanceAmount(i*22050/2);
 	}
 }
 
@@ -345,27 +370,40 @@ void MainComponent::playPressed()
 
 void MainComponent::resetAudioRenderer()
 {
-	mGrainLength = kGrainLength;	//smaller value is smaller grain lengths and less recognizable sounds
-	mGrainCurrentPositionRelativeLeft = 0;
-	mGrainCurrentPositionRelativeRight = 0;
-	mGrainStartPositionAbsolute = 0;
-	mSampleCounter = 0;
-	mVelocityFactor = kVelocityFactor;	//higher is slower moving through audio file
-	mGrainAdvanceAmount = kGrainAdvanceAmount;//how many samples the window will advance through the audio file
+	for (int i=0; i< NUM_GRAINS; i++)
+	{
+		if (mGranularSlices[i] != 0)
+		{
+			mGranularSlices[i]->resetAudioPlayback();
+		}
+	}
 }
 
 void MainComponent::audioDeviceAboutToStart (AudioIODevice* device)
 {
     zeromem (samples, sizeof (samples));
+	mPlaying = true;
+	//mPlayButton->setButtonText(T("Stop"));
 }
 
 void MainComponent::audioDeviceStopped()
 {
     zeromem (samples, sizeof (samples));
+	mPlaying = false;
+	//mPlayButton->setButtonText(T("Play"));
 }
 
 void MainComponent::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
 												 float** outputChannelData, int numOutputChannels, int numSamples)
+{
+	
+	if (renderAudioToBuffer(outputChannelData, numOutputChannels, numSamples))
+	{
+		mDeviceManager.removeAudioCallback(this);
+	}
+}
+
+bool MainComponent::renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples)
 {
 	// We need to clear the output buffers, in case they're full of junk..
     for (int i = 0; i < numOutputChannels; ++i)
@@ -373,66 +411,15 @@ void MainComponent::audioDeviceIOCallback (const float** inputChannelData, int n
         if (outputChannelData[i] != 0)
             zeromem (outputChannelData[i], sizeof (float) * numSamples);
 	}	 
-	if (renderAudioToBuffer(outputChannelData, numOutputChannels, numSamples))
-	{
-		mDeviceManager.removeAudioCallback(this);
-		//mPlayButton->setButtonText(T("Play"));
-		mPlaying = false;
-	}
-}
-
-bool MainComponent::renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples)
-{
-	// This renders the granular audio into the output buffer for playback or file writing
-	for (int i = 0; i < numOutputChannels; ++i)
-	{
-		float *output = outputChannelData[i];
-		int samplesToRead = numSamples;
-		if ((mGrainStartPositionAbsolute + mGrainCurrentPositionRelativeLeft + numSamples) > mBufferLength/mNumChannels)
-		{
-			//do something here, we're about to go out of bounds
-			 zeromem (outputChannelData[0], sizeof (float) * numSamples);
-			 zeromem (outputChannelData[1], sizeof (float) * numSamples);
-			 mGrainStartPositionAbsolute = 0;
-			 mGrainCurrentPositionRelativeLeft = 0;
-			 mGrainCurrentPositionRelativeRight = 0;
-			 //returns true if we've hit the end of our data.  The caller should stop playing or writing audio here
-			 // This will just kill the last audio buffer instead of silencing the remaining space with zeros.  
-			 // Better to silence with zeros, but that's more work!
-			 return true;
-		}
-		
-		for (int j=0; j<samplesToRead; j++)
-		{
-			if (i==0)//left channel
-			{
-				int samppos = mGrainStartPositionAbsolute + mGrainCurrentPositionRelativeLeft;
-				output[j] = mLeftBuffer[samppos];
-				mGrainCurrentPositionRelativeLeft++;
-				if (mGrainCurrentPositionRelativeLeft >= mGrainLength)
-					mGrainCurrentPositionRelativeLeft = 0;
-			
-			}
-			else	//right channel
-			{
-				int samppos = mGrainStartPositionAbsolute + mGrainCurrentPositionRelativeRight;
-				output[j] = mRightBuffer[samppos];
-				mGrainCurrentPositionRelativeRight++;
-				if (mGrainCurrentPositionRelativeRight >= mGrainLength)
-					mGrainCurrentPositionRelativeRight = 0;
-			}
+	bool outofbounds = false;
 	
-		}
-	}
-	
-	mSampleCounter += numSamples;
-	if (mSampleCounter >= (int64)(mGrainLength * mVelocityFactor))
+	for (int i=0; i<NUM_GRAINS; i++)
 	{
-		mGrainStartPositionAbsolute += mGrainAdvanceAmount;
-		mSampleCounter = 0;
+		outofbounds = mGranularSlices[i]->renderAudioBlock(outputChannelData, numOutputChannels, numSamples);
+		if (outofbounds)
+			return true;
 	}
-	
-	return false;
+	return outofbounds;
 }
 //[/MiscUserCode]
 
