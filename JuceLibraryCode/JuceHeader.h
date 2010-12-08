@@ -14,7 +14,7 @@
 #define __APPHEADERFILE_21C9D116__
 
 #include "AppConfig.h"
-#include "../../../Downloads/juce/juce_amalgamated.h"
+#include "../../sdk/juce/juce_amalgamated.h"
 
 namespace ProjectInfo
 {
