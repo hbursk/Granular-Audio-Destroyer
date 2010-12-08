@@ -232,11 +232,11 @@ void MainComponent::memStoreAudioFile(File &audioFile)
 		}
 		int num = reader->numChannels;
 		int* destBufs[num];
-		mLeftBuffer = (float*)malloc(reader->lengthInSamples/reader->numChannels*sizeof(float));
+		mLeftBuffer = (float*)malloc((reader->lengthInSamples/reader->numChannels*sizeof(float))+4096*sizeof(float)); //add some extra zeros at the end for safety
 		destBufs[0] = (int*)mLeftBuffer;
 		if (reader->numChannels > 1)
 		{
-			mRightBuffer = (float*)malloc(reader->lengthInSamples/reader->numChannels*sizeof(float));
+			mRightBuffer = (float*)malloc((reader->lengthInSamples/reader->numChannels*sizeof(float))+4096*sizeof(float)); //add some extra zeros at the end for safety
 			destBufs[1] = (int*)mRightBuffer;
 		}
 		reader->read(destBufs, reader->numChannels, 0, reader->lengthInSamples/reader->numChannels, false);
@@ -268,10 +268,10 @@ void MainComponent::setupGranularSlices()
 		mGranularSlices[i] = new GranularSlice(mLeftBuffer, mRightBuffer, mBufferLength, mNumChannels);
 		//experimental settings here - will be controllable via GUI instead in the future
 		mGranularSlices[i]->setPan(1.0f*i/(1.0f*NUM_GRAINS));
-		mGranularSlices[i]->setGrainLength(i*(44100/4));
+		mGranularSlices[i]->setGrainLength((i+1)*(44100/4));
 		mGranularSlices[i]->setGrainStartPosition(i*22050);
-		mGranularSlices[i]->setVelocity(1.0f*i*0.25f);
-		mGranularSlices[i]->setGrainAdvanceAmount(i*22050/2);
+		mGranularSlices[i]->setVelocity(1.0f*(i+1)*0.25f);
+		mGranularSlices[i]->setGrainAdvanceAmount((i+1)*22050/2);
 	}
 }
 
@@ -399,7 +399,8 @@ void MainComponent::audioDeviceIOCallback (const float** inputChannelData, int n
 	
 	if (renderAudioToBuffer(outputChannelData, numOutputChannels, numSamples))
 	{
-		mDeviceManager.removeAudioCallback(this);
+		//should be able to loop without bad access, let's not stop!
+		//mDeviceManager.removeAudioCallback(this);
 	}
 }
 

@@ -27,7 +27,7 @@
 #include "GranularSlice.h"
 //[/Headers]
 
-#define NUM_GRAINS 6
+#define NUM_GRAINS 8
 
 //==============================================================================
 /**

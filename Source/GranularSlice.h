@@ -8,6 +8,7 @@
  */
  #include "../JuceLibraryCode/JuceHeader.h"
 
+
 class GranularSlice
 {
 public:

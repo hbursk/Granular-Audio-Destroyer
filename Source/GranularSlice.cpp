@@ -13,6 +13,7 @@
 const int kGrainLength = 44100;
 const float kVelocityFactor = 1.0f;
 const int kGrainAdvanceAmount = kGrainLength/3.0;
+const int64 kSampleRamp = 500;
 
 GranularSlice::GranularSlice (float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels)
 	: mLeftChannelData (leftchanneldata),
@@ -156,7 +157,15 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 				output[j] = 1.0f;
 			else if (output[j] < -1.0f)
 				output[j] = -1.0f;
+				
+			//ramp in and out on grain boundaries	
+			if (mGrainCurrentPositionRelative[i] <= kSampleRamp)
+				output[j] = output[j] * ((float)(1.0f*mGrainCurrentPositionRelative[i]/(1.0f*kSampleRamp)));
+			else if ((mGrainLength - mGrainCurrentPositionRelative[i]) <= kSampleRamp)
+				output[j] = output[j] * ((float)(1.0f*(mGrainLength - mGrainCurrentPositionRelative[i]))/(1.0f*kSampleRamp));
+				
 			mGrainCurrentPositionRelative[i]++;
+			//if we've reached the end of the Grain Slice, loop back to start
 			if (mGrainCurrentPositionRelative[i] >= mGrainLength)
 				mGrainCurrentPositionRelative[i] = 0;
 		}
@@ -167,6 +176,8 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 	{
 		mGrainStartPositionAbsolute += mGrainAdvanceAmount;
 		mSampleCounter = 0;
+		mGrainCurrentPositionRelative[0] = 0;
+		mGrainCurrentPositionRelative[1] = 0;
 	}
 	
 	return false;
