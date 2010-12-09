@@ -23,7 +23,7 @@
 		A2E44BFE6854C296EFC7ACE2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64F38603F03FEF90DE8308 /* Cocoa.framework */; };
 		CAA0BE9512AF03D9009DE2E4 /* GranularSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0BE9412AF03D9009DE2E4 /* GranularSlice.cpp */; };
 		CAA0C00612B06E61009DE2E4 /* MainEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0C00412B06E61009DE2E4 /* MainEditor.cpp */; };
-		CAC504A112A782BC00DC7BBB /* JuceStandalonebackup.xcodeproj in Sources */ = {isa = PBXBuildFile; fileRef = CAC5049F12A782BC00DC7BBB /* JuceStandalonebackup.xcodeproj */; };
+		CAA0C16012B0C157009DE2E4 /* MainComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0C15F12B0C157009DE2E4 /* MainComponent.cpp */; };
 		D180A200AC0A15B75E9C0862 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A625967612CDE6C42EF66702 /* OpenGL.framework */; };
 		DADE4501FDEA728923548866 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7B23EF196E1B9C6415C569 /* QTKit.framework */; };
 		FE081651FCBF2DB607514C50 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ABA738CA921707A610D4F9C /* Carbon.framework */; };
@@ -52,7 +52,7 @@
 		CAA0BE9412AF03D9009DE2E4 /* GranularSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GranularSlice.cpp; path = ../../Source/GranularSlice.cpp; sourceTree = "<group>"; };
 		CAA0C00412B06E61009DE2E4 /* MainEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainEditor.cpp; path = ../../Source/MainEditor.cpp; sourceTree = SOURCE_ROOT; };
 		CAA0C00512B06E61009DE2E4 /* MainEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainEditor.h; path = ../../Source/MainEditor.h; sourceTree = SOURCE_ROOT; };
-		CAC5049F12A782BC00DC7BBB /* JuceStandalonebackup.xcodeproj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = JuceStandalonebackup.xcodeproj; sourceTree = "<group>"; };
+		CAA0C15F12B0C157009DE2E4 /* MainComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainComponent.cpp; path = ../../Source/MainComponent.cpp; sourceTree = SOURCE_ROOT; };
 		CAC504A012A782BC00DC7BBB /* MainComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainComponent.h; path = ../../Source/MainComponent.h; sourceTree = SOURCE_ROOT; };
 		CB42FF027A87347C3128B2E6 /* JuceLibraryCode1.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode1.mm; path = ../../JuceLibraryCode/JuceLibraryCode1.mm; sourceTree = SOURCE_ROOT; };
 		ECB9F35916340C9E1FE553DD /* DiscRecording.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiscRecording.framework; path = System/Library/Frameworks/DiscRecording.framework; sourceTree = SDKROOT; };
@@ -146,7 +146,7 @@
 			children = (
 				CAA0C00412B06E61009DE2E4 /* MainEditor.cpp */,
 				CAA0C00512B06E61009DE2E4 /* MainEditor.h */,
-				CAC5049F12A782BC00DC7BBB /* JuceStandalonebackup.xcodeproj */,
+				CAA0C15F12B0C157009DE2E4 /* MainComponent.cpp */,
 				CAC504A012A782BC00DC7BBB /* MainComponent.h */,
 				C8B25CE4CD6412D0435D28CF /* MainWindow.cpp */,
 				70FDB921D33EF51A6849DA9D /* MainWindow.h */,
@@ -223,9 +223,9 @@
 				4FD5E794EFE69F0562030E0C /* JuceLibraryCode2.mm in Sources */,
 				4B6BF735CBA2660D8DD84207 /* JuceLibraryCode3.mm in Sources */,
 				57F207C6976D2D15B7BD8602 /* JuceLibraryCode4.mm in Sources */,
-				CAC504A112A782BC00DC7BBB /* JuceStandalonebackup.xcodeproj in Sources */,
 				CAA0BE9512AF03D9009DE2E4 /* GranularSlice.cpp in Sources */,
 				CAA0C00612B06E61009DE2E4 /* MainEditor.cpp in Sources */,
+				CAA0C16012B0C157009DE2E4 /* MainComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
