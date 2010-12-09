@@ -18,7 +18,7 @@
 
 namespace ProjectInfo
 {
-    const char* const  projectName    = "JuceStandalone";
+    const char* const  projectName    = "GRANULAR";
     const char* const  versionString  = "1.0.0";
     const int          versionNumber  = 0x10000;
 }

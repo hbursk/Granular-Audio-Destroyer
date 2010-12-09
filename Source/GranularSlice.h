@@ -27,6 +27,14 @@ public:
 	void setRandomStartFactor(float randamount);
 	void setRenderMono(bool mono);
 	
+	float getGain();
+	float getPan();
+	int64 getGrainLength();
+	int64 getGrainStartPosition();
+	float getVelocity();
+	int64 getGrainAdvanceAmount();
+	
+	int64 getDataLength();
 	void resetAudioPlayback();
 	
 	bool renderAudioBlock(float** outputData, int numChannels, int numSamples);

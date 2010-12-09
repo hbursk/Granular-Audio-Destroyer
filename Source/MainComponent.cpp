@@ -27,31 +27,29 @@
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
+const float kMinGain = 0.0f;
+const float kMaxGain = 4.0f;
+const int64 kMinGrainLength = 220;
+const int64 kMaxGrainLength = 44100*2;
+const int64 kMinAdvance = 0;
+const int64 kMaxAdvance = 44100;
+const float kMinVelocity = 0.0f;
+const float kMaxVelocity = 3.0f;
+
+
 
 //==============================================================================
 MainComponent::MainComponent ()
-    : mOpenFileButton (0),
-      mSaveFileButton (0),
-	  mPlayButton(0),
+    : mMainEditor (0),
 	  mCurrentAudioFileSource(0),
 	  mInterleavedBuffer(0),
 	  mLeftBuffer(0),
 	  mRightBuffer(0)
 {
-    addAndMakeVisible (mOpenFileButton = new TextButton (T("OpenFileButton")));
-    mOpenFileButton->setButtonText (T("Open File"));
-    mOpenFileButton->addButtonListener (this);
-
-    addAndMakeVisible (mSaveFileButton = new TextButton (T("SaveFileButton")));
-    mSaveFileButton->setButtonText (T("Save File"));
-    mSaveFileButton->addButtonListener (this);
-	
-	addAndMakeVisible (mPlayButton = new TextButton (T("PlayButton")));
-    mPlayButton->setButtonText (T("Play"));
-    mPlayButton->addButtonListener (this);
-
 
     //[UserPreSize]
+	addAndMakeVisible (mMainEditor = new MainEditor (this));
+	
 	mDeviceManager.initialise (2, 2, 0, true, String::empty, 0);
 	mDeviceManager.addAudioCallback (&mAudioSourcePlayer);
     mAudioSourcePlayer.setSource (&mTransportSource);
@@ -63,7 +61,7 @@ MainComponent::MainComponent ()
 
     //[Constructor] You can add your own custom stuff here..
 	//setup Grain variables for testing
-	
+	mCurrentSliceIndex = 0;
 	for (int i=0; i< NUM_GRAINS; i++)
 	{
 		mGranularSlices[i] = 0;
@@ -76,12 +74,12 @@ MainComponent::~MainComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    deleteAndZero (mOpenFileButton);
-    deleteAndZero (mSaveFileButton);
 
     //[/Destructor_pre]
 
     //[Destructor]. You can add your own custom destruction code here..
+	deleteAndZero (mMainEditor);
+
 	mTransportSource.setSource (0);
     mAudioSourcePlayer.setSource (0);
 
@@ -124,94 +122,240 @@ void MainComponent::paint (Graphics& g)
 
 void MainComponent::resized()
 {
-    mOpenFileButton->setBounds (24, 272, 150, 24);
-    mSaveFileButton->setBounds (216, 272, 150, 24);
-	mPlayButton->setBounds (430, 272, 150, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
-void MainComponent::buttonClicked (Button* buttonThatWasClicked)
+//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+#pragma mark GUI Button Calls
+void MainComponent::playPressed()
 {
-    //[UserbuttonClicked_Pre]
-    //[/UserbuttonClicked_Pre]
-
-    if (buttonThatWasClicked == mOpenFileButton)
-    {
-		//[UserButtonCode_mOpenFileButton] -- add your button handler code here..
-
-		if (mPlaying)
-		{
-			mPlaying = false;
-			mPlayButton->setButtonText(T("Play"));
-			mDeviceManager.removeAudioCallback(this);
-		}
-		WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
-
-        FileBrowserComponent browser (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles,
-                                      File::nonexistent,
-                                      &wildcardFilter,
-                                      0);
-
-        FileChooserDialogBox dialogBox ("Open a Wave File",
-                                        "Please choose a Wave file to open...",
-                                        browser, true,
-                                        Colours::lightblue);
-
-        if (dialogBox.show())
-        {
-            File mCurrentFile = browser.getSelectedFile(0);
-			memStoreAudioFile(mCurrentFile);
-			//mDeviceManager.addAudioCallback(this);
-        }
-       
-        //[/UserButtonCode_mOpenFileButton]
-    }
-    else if (buttonThatWasClicked == mSaveFileButton)
-    {
-		//[UserButtonCode_mSaveFileButton] -- add your button handler code here..
-
-		if (mPlaying)
-		{
-			mPlaying = false;
-			mPlayButton->setButtonText(T("Play"));
-			mDeviceManager.removeAudioCallback(this);
-		}
-		if (mLeftBuffer == 0)
-			return;
-		WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
-
-        FileBrowserComponent browser (FileBrowserComponent::saveMode | FileBrowserComponent::canSelectFiles,
-                                      File::nonexistent,
-                                      &wildcardFilter,
-                                      0);
-
-        FileChooserDialogBox dialogBox ("Save a Wave File",
-                                        "Please choose a Wave file to save...",
-                                        browser, true,
-                                        Colours::lightblue);
-
-        if (dialogBox.show())
-        {
-            File savefile = browser.getSelectedFile(0);
-			saveAudioFile(savefile);		
-        }
-       
-        //[/UserButtonCode_mSaveFileButton]
-    }
-	else if (buttonThatWasClicked == mPlayButton)
+	if (mLeftBuffer == 0)
+		return;
+	if (mPlaying)
 	{
-		//[UserButtonCode_mPlayButton] -- add your button handler code here..
-		playPressed();
-		//[/UserButtonCode_mPlayButton]
+		mDeviceManager.removeAudioCallback(this);
+		mPlaying = false;
+		resetAudioRenderer();
 	}
-
-    //[UserbuttonClicked_Post]
-    //[/UserbuttonClicked_Post]
+	else
+	{
+		resetAudioRenderer();
+		mDeviceManager.addAudioCallback(this);
+		mPlaying = true;
+	}
 }
 
-//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+void MainComponent::openFilePressed()
+{
+	if (mPlaying)
+	{
+		mPlaying = false;
+		mDeviceManager.removeAudioCallback(this);
+	}
+	WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
 
+	FileBrowserComponent browser (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles,
+								  File::nonexistent,
+								  &wildcardFilter,
+								  0);
+
+	FileChooserDialogBox dialogBox ("Open a Wave File",
+									"Please choose a Wave file to open...",
+									browser, true,
+									Colours::darkred);
+
+	if (dialogBox.show())
+	{
+		File mCurrentFile = browser.getSelectedFile(0);
+		memStoreAudioFile(mCurrentFile);
+		//mDeviceManager.addAudioCallback(this);
+	}
+}
+
+void MainComponent::saveFilePressed()
+{
+	if (mPlaying)
+	{
+		mPlaying = false;
+		mDeviceManager.removeAudioCallback(this);
+	}
+	if (mLeftBuffer == 0)
+		return;
+	WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
+
+	FileBrowserComponent browser (FileBrowserComponent::saveMode | FileBrowserComponent::canSelectFiles,
+								  File::nonexistent,
+								  &wildcardFilter,
+								  0);
+
+	FileChooserDialogBox dialogBox ("Save a Wave File",
+									"Please choose a Wave file to save...",
+									browser, true,
+									Colours::darkred);
+
+	if (dialogBox.show())
+	{
+		File savefile = browser.getSelectedFile(0);
+		saveAudioFile(savefile);		
+	}
+}
+
+bool MainComponent::isPlaying()
+{
+	return mPlaying;
+}
+
+#pragma mark GUI Parameter Functions
+//GUI parameters will all receive between 0.0f-1.0f for slider values
+//Up to this class to convert them and set them to usable values
+void  MainComponent::setCurrentSliceIndex(int index)
+{
+	if (index > (NUM_GRAINS - 1))
+		index = 0;
+	mCurrentSliceIndex = index;
+}
+
+int   MainComponent::getCurrentSliceIndex()
+{
+	return mCurrentSliceIndex;
+}
+
+void  MainComponent::setGrainGain(float nvalue)
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return;
+	float gainvalue = nvalue*(kMaxGain - kMinGain) + kMinGain;
+	mGranularSlices[mCurrentSliceIndex]->setGain(gainvalue);
+}
+
+float MainComponent::getGrainGainSliderValue()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.5f;
+	float gainvalue = getGrainGain();
+	float slidervalue = (gainvalue - kMinGain)/(kMaxGain - kMinGain);
+	return slidervalue;
+}
+
+float MainComponent::getGrainGain()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 1.0f;
+	return mGranularSlices[mCurrentSliceIndex]->getGain();
+}
+
+void  MainComponent::setGrainPan(float pan)
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return;
+	mGranularSlices[mCurrentSliceIndex]->setPan(pan);
+}
+
+float MainComponent::getGrainPan()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.5f;
+	return mGranularSlices[mCurrentSliceIndex]->getPan();
+}
+
+void  MainComponent::setGrainLength(float nvalue)
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return;
+	float length = nvalue*(kMaxGrainLength - kMinGrainLength) + kMinGrainLength;
+	mGranularSlices[mCurrentSliceIndex]->setGrainLength(length);
+}
+
+int64 MainComponent::getGrainLength()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return kMinGrainLength;
+	return mGranularSlices[mCurrentSliceIndex]->getGrainLength();
+}
+
+float MainComponent::getGrainLengthSliderValue()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.0f;
+	float length = getGrainLength();
+	float slidervalue = (length - kMinGrainLength)/(kMaxGrainLength - kMinGrainLength);
+	return slidervalue;
+}
+
+void  MainComponent::setGrainStartPosition(float nvalue)
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return;
+	int64 startpos = (int64)(nvalue*(1.0f*mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f));
+	mGranularSlices[mCurrentSliceIndex]->setGrainStartPosition(startpos);
+}
+
+int64 MainComponent::getGrainStartPosition()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.0f;
+	return mGranularSlices[mCurrentSliceIndex]->getGrainStartPosition();
+}
+
+float MainComponent::getGrainStartPositionSliderValue()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.0f;
+	int64 startpos = getGrainStartPosition();
+	float slidervalue = (1.0f*startpos)/(1.0f*mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f);
+	return slidervalue;
+}
+
+void  MainComponent::setGrainAdvanceAmount(float nvalue)
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return;
+	int64 advanceamount = (int64)(nvalue*(kMaxAdvance - kMinAdvance) + kMinAdvance);
+	mGranularSlices[mCurrentSliceIndex]->setGrainAdvanceAmount(advanceamount);
+}
+
+int64 MainComponent::getGrainAdvanceAmount()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0;
+	return mGranularSlices[mCurrentSliceIndex]->getGrainAdvanceAmount();
+}
+
+float MainComponent::getGrainAdvanceAmountSliderValue()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.0f;
+	int64 advanceamount = getGrainAdvanceAmount();
+	float slidervalue = (advanceamount - kMinAdvance)/(kMaxAdvance - kMinAdvance);
+	return slidervalue;
+}
+
+void  MainComponent::setGrainVelocityFactor(float nvalue)
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return;
+	float velocity = (nvalue*(kMaxVelocity - kMinVelocity) + kMinVelocity);
+	mGranularSlices[mCurrentSliceIndex]->setVelocity(velocity);
+}
+
+float MainComponent::getGrainVelocityFactor()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.0f;
+	return mGranularSlices[mCurrentSliceIndex]->getVelocity();
+}
+
+float MainComponent::getGrainVelocityFactorSliderValue()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.0f;
+	float velocity = getGrainVelocityFactor();
+	float slidervalue = (velocity - kMinVelocity)/(kMaxVelocity - kMinVelocity);
+	return slidervalue;
+}
+
+#pragma mark Custom Audio Functions
 void MainComponent::memStoreAudioFile(File &audioFile)
 {
 	//we only want raw samples, no header
@@ -348,26 +492,6 @@ void MainComponent::playAudioFile(File &audioFile)
     }
 }
 
-void MainComponent::playPressed()
-{
-	if (mLeftBuffer == 0)
-		return;
-	if (mPlaying)
-	{
-		mDeviceManager.removeAudioCallback(this);
-		mPlaying = false;
-		mPlayButton->setButtonText(T("Play"));
-		resetAudioRenderer();
-	}
-	else
-	{
-		resetAudioRenderer();
-		mDeviceManager.addAudioCallback(this);
-		mPlaying = true;
-		mPlayButton->setButtonText(T("Stop"));
-	}
-}
-
 void MainComponent::resetAudioRenderer()
 {
 	for (int i=0; i< NUM_GRAINS; i++)
@@ -379,6 +503,7 @@ void MainComponent::resetAudioRenderer()
 	}
 }
 
+#pragma mark AudioIODeviceCallbacks
 void MainComponent::audioDeviceAboutToStart (AudioIODevice* device)
 {
     zeromem (samples, sizeof (samples));

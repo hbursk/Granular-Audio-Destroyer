@@ -51,7 +51,7 @@ public:
     //==============================================================================
     const String getApplicationName()
     {
-        return "JuceStandalone";
+        return "Granular Audio Destroyer";
     }
 
     const String getApplicationVersion()

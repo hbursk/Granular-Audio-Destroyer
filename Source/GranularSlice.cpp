@@ -115,6 +115,36 @@ void GranularSlice::setRenderMono (bool mono)
 	mRenderMono = mono;
 }
 
+float GranularSlice::getGain()
+{
+	return mGain;
+}
+
+float GranularSlice::getPan()
+{
+	return mPan;
+}
+
+int64 GranularSlice::getGrainLength()
+{
+	return mGrainLength;
+}
+
+int64 GranularSlice::getGrainStartPosition()
+{
+	return mGrainStartPositionAbsolute;
+}
+
+float GranularSlice::getVelocity()
+{
+	return mVelocityFactor;
+}
+
+int64 GranularSlice::getGrainAdvanceAmount()
+{
+	return mGrainAdvanceAmount;
+}
+
 void GranularSlice::resetAudioPlayback()
 {
 	mGrainCurrentPositionRelativeLeft = 0;
@@ -125,16 +155,24 @@ void GranularSlice::resetAudioPlayback()
 	mSampleCounter = 0;
 }
 
+int64 GranularSlice::getDataLength()
+{
+	return mDataLength;
+}
+
 bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int numSamples)
 {
-	// The outputData pointer could have existing audio in it.  Mix into that.  
+	// The outputData pointer could have existing audio in it.  Mix into that. 
+	// Store this locally so that they won't change during an audio buffer render - psuedo variable lock 
+	int grainPositionAbsolute = mGrainStartPositionAbsolute;
+	int grainLength = mGrainLength;
 	
 	// This renders the granular audio into the output buffer for playback or file writing
 	for (int i = 0; i < numChannels; ++i)
 	{
 		float *output = outputData[i];
 		int samplesToRead = numSamples;
-		if ((mGrainStartPositionAbsolute + mGrainCurrentPositionRelative[i] + numSamples) > mDataLength/mNumChannels)
+		if ((grainPositionAbsolute + mGrainCurrentPositionRelative[i] + numSamples) > mDataLength/mNumChannels)
 		{
 			//do something here, we're about to go out of bounds
 			for (int j= 0; j<numChannels; ++j)
@@ -150,7 +188,7 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 		
 		for (int j=0; j<samplesToRead; ++j)
 		{
-			int samppos = mGrainStartPositionAbsolute + mGrainCurrentPositionRelative[i];
+			int samppos = grainPositionAbsolute + mGrainCurrentPositionRelative[i];
 			output[j] += mData[i][samppos] * mGain * mPanGain[i];
 			//clip output so you don't exceed digital max
 			if (output[j] > 1.0f)
@@ -161,23 +199,26 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 			//ramp in and out on grain boundaries	
 			if (mGrainCurrentPositionRelative[i] <= kSampleRamp)
 				output[j] = output[j] * ((float)(1.0f*mGrainCurrentPositionRelative[i]/(1.0f*kSampleRamp)));
-			else if ((mGrainLength - mGrainCurrentPositionRelative[i]) <= kSampleRamp)
-				output[j] = output[j] * ((float)(1.0f*(mGrainLength - mGrainCurrentPositionRelative[i]))/(1.0f*kSampleRamp));
+			else if ((grainLength - mGrainCurrentPositionRelative[i]) <= kSampleRamp)
+				output[j] = output[j] * ((float)(1.0f*(grainLength - mGrainCurrentPositionRelative[i]))/(1.0f*kSampleRamp));
 				
 			mGrainCurrentPositionRelative[i]++;
 			//if we've reached the end of the Grain Slice, loop back to start
-			if (mGrainCurrentPositionRelative[i] >= mGrainLength)
+			if (mGrainCurrentPositionRelative[i] >= grainLength)
 				mGrainCurrentPositionRelative[i] = 0;
 		}
 	}
 	
 	mSampleCounter += numSamples;
-	if (mSampleCounter >= (int64)(mGrainLength * mVelocityFactor))
+	if (mSampleCounter >= (int64)(mGrainLength * mVelocityFactor) && (mVelocityFactor != 0))
 	{
 		mGrainStartPositionAbsolute += mGrainAdvanceAmount;
 		mSampleCounter = 0;
-		mGrainCurrentPositionRelative[0] = 0;
-		mGrainCurrentPositionRelative[1] = 0;
+		if (mGrainAdvanceAmount != 0)
+		{
+			mGrainCurrentPositionRelative[0] = 0;
+			mGrainCurrentPositionRelative[1] = 0;
+		}
 	}
 	
 	return false;

@@ -25,9 +25,10 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "GranularSlice.h"
+#include "MainEditor.h"
 //[/Headers]
 
-#define NUM_GRAINS 8
+#define NUM_GRAINS 1
 
 //==============================================================================
 /**
@@ -38,7 +39,6 @@
                                                                     //[/Comments]
 */
 class MainComponent  : public Component,
-                       public ButtonListener,
 					   public AudioIODeviceCallback
 
 {
@@ -50,20 +50,44 @@ public:
     //==============================================================================
     //[UserMethods] -- You can add your own custom methods in this section.
 	
+	
+	void playPressed();
+	void openFilePressed();
+	void saveFilePressed();
+	bool isPlaying();
+	
+	//GUI parameters
+	void  setCurrentSliceIndex(int index);
+	int   getCurrentSliceIndex();
+	void  setGrainGain(float nvalue);
+	float getGrainGainSliderValue();
+	float getGrainGain();
+	void  setGrainPan(float pan);
+	float getGrainPan();
+	void  setGrainLength(float nvalue);
+	int64 getGrainLength();
+	float getGrainLengthSliderValue();
+	void  setGrainStartPosition(float nvalue);
+	int64 getGrainStartPosition();
+	float getGrainStartPositionSliderValue();
+	void  setGrainAdvanceAmount(float nvalue);
+	int64 getGrainAdvanceAmount();
+	float getGrainAdvanceAmountSliderValue();
+	void  setGrainVelocityFactor(float nvalue);
+	float getGrainVelocityFactor();
+	float getGrainVelocityFactorSliderValue();
+	
 	void playAudioFile(File &audioFile);
 	void memStoreAudioFile(File &audioFile);
 	void saveAudioFile(File &saveFile);
-	void playPressed();
 	void resetAudioRenderer();
 	void setupGranularSlices();
 	bool renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples);
-
+	
     //[/UserMethods]
 
     void paint (Graphics& g);
-    void resized();
-    void buttonClicked (Button* buttonThatWasClicked);
-	
+    void resized();	
 
 	
 	void audioDeviceAboutToStart (AudioIODevice* device);
@@ -105,12 +129,13 @@ private:
 	bool  mPlaying;
 	GranularSlice *mGranularSlices[NUM_GRAINS];
 	
+	int   mCurrentSliceIndex;
+	
+	MainEditor *mMainEditor;
+	
     //[/UserVariables]
 
     //==============================================================================
-    TextButton* mOpenFileButton;
-    TextButton* mSaveFileButton;
-	TextButton* mPlayButton;
 	
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)
