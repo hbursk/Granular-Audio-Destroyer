@@ -163,7 +163,7 @@ void MainComponent::openFilePressed()
 	FileChooserDialogBox dialogBox ("Open a Wave File",
 									"Please choose a Wave file to open...",
 									browser, true,
-									Colours::darkred);
+									Colours::lightgrey);
 
 	if (dialogBox.show())
 	{
@@ -192,7 +192,7 @@ void MainComponent::saveFilePressed()
 	FileChooserDialogBox dialogBox ("Save a Wave File",
 									"Please choose a Wave file to save...",
 									browser, true,
-									Colours::darkred);
+									Colours::lightgrey);
 
 	if (dialogBox.show())
 	{
