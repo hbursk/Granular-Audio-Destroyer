@@ -65,7 +65,6 @@ MainEditor::MainEditor (Component *comp)
     mSliceChooserBox->addItem (T("EDIT GRAIN: 8"), 8);
     mSliceChooserBox->addListener (this);
 	mSliceChooserBox->setSelectedId(1, true);
-	
 
     addAndMakeVisible (mGainSlider = new Slider (T("GainSlider")));
     mGainSlider->setRange (0, 1, 0);
@@ -75,6 +74,7 @@ MainEditor::MainEditor (Component *comp)
     mGainSlider->setColour (Slider::thumbColourId, Colour (0xff401a05));
     mGainSlider->setColour (Slider::rotarySliderFillColourId, Colour (0xcf190202));
     mGainSlider->addListener (this);
+	mGainSlider->setSkewFactorFromMidPoint(0.25);
 
     addAndMakeVisible (mGainLabel = new Label (T("GainLabel"),
                                                T("GAIN\n")));
@@ -114,6 +114,7 @@ MainEditor::MainEditor (Component *comp)
     mGrainLengthSlider->setColour (Slider::thumbColourId, Colour (0xff401a05));
     mGrainLengthSlider->setColour (Slider::rotarySliderFillColourId, Colour (0xcf190202));
     mGrainLengthSlider->addListener (this);
+	mGrainLengthSlider->setSkewFactorFromMidPoint(0.25);
 
     addAndMakeVisible (mGrainSizeLabel = new Label (T("GrainSizeLabel"),
                                                     T("GRAIN SIZE\n")));
