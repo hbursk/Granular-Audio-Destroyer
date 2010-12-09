@@ -16,6 +16,7 @@
 		4B6BF735CBA2660D8DD84207 /* JuceLibraryCode3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5E9F90F9935E2AC2F8F0B965 /* JuceLibraryCode3.mm */; };
 		4FD5E794EFE69F0562030E0C /* JuceLibraryCode2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1469C70E8663B79F151C3626 /* JuceLibraryCode2.mm */; };
 		5347C24FFF4088C95FA4896E /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECB9F35916340C9E1FE553DD /* DiscRecording.framework */; };
+		5439373C12B0A06E00D01BB9 /* GranularSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5439373A12B0A06E00D01BB9 /* GranularSlice.cpp */; };
 		57F207C6976D2D15B7BD8602 /* JuceLibraryCode4.mm in Sources */ = {isa = PBXBuildFile; fileRef = A7B669F5A039ADE6DCE33DB5 /* JuceLibraryCode4.mm */; };
 		656D887203DFBAA17693D4B0 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01006B52FCE5B9E191C75CD5 /* QuickTime.framework */; };
 		89B821D08E197831027E7F0B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB7086188552BD1BFA92A66C /* CoreAudio.framework */; };
@@ -35,6 +36,8 @@
 		49F6B227FDAB26F49B673C6C /* JuceStandalone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JuceStandalone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B64F38603F03FEF90DE8308 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4C25860F0B19B11D9D44D0D8 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		5439373A12B0A06E00D01BB9 /* GranularSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GranularSlice.cpp; path = ../../Source/GranularSlice.cpp; sourceTree = SOURCE_ROOT; };
+		5439373B12B0A06E00D01BB9 /* GranularSlice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GranularSlice.h; path = ../../Source/GranularSlice.h; sourceTree = SOURCE_ROOT; };
 		5AD3BBC35D3CAF423DD6B2A9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5E7B23EF196E1B9C6415C569 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		5E9F90F9935E2AC2F8F0B965 /* JuceLibraryCode3.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode3.mm; path = ../../JuceLibraryCode/JuceLibraryCode3.mm; sourceTree = SOURCE_ROOT; };
@@ -138,6 +141,8 @@
 		C699A05EE2B387421FACFF0A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5439373A12B0A06E00D01BB9 /* GranularSlice.cpp */,
+				5439373B12B0A06E00D01BB9 /* GranularSlice.h */,
 				CAC5049F12A782BC00DC7BBB /* MainComponent.cpp */,
 				CAC504A012A782BC00DC7BBB /* MainComponent.h */,
 				C8B25CE4CD6412D0435D28CF /* MainWindow.cpp */,
@@ -175,7 +180,6 @@
 			isa = PBXProject;
 			buildConfigurationList = 4B6F18A74DF742284C84C72C /* Build configuration list for PBXProject "JuceStandalone" */;
 			compatibilityVersion = "Xcode 3.0";
-			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -214,6 +218,7 @@
 				4B6BF735CBA2660D8DD84207 /* JuceLibraryCode3.mm in Sources */,
 				57F207C6976D2D15B7BD8602 /* JuceLibraryCode4.mm in Sources */,
 				CAC504A112A782BC00DC7BBB /* MainComponent.cpp in Sources */,
+				5439373C12B0A06E00D01BB9 /* GranularSlice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
