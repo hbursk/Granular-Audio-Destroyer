@@ -26,6 +26,7 @@ public:
 	void setRandomReadFactor(float randamount);
 	void setRandomStartFactor(float randamount);
 	void setRenderMono(bool mono);
+	void setBypass(bool bypass);
 	
 	float getGain();
 	float getPan();
@@ -33,6 +34,7 @@ public:
 	int64 getGrainStartPosition();
 	float getVelocity();
 	int64 getGrainAdvanceAmount();
+	bool  isBypass();
 	
 	int64 getDataLength();
 	void resetAudioPlayback();
@@ -48,6 +50,7 @@ private:
 	
 	int64 mGrainLength;
 	int64 mGrainStartPositionAbsolute;
+	int64 mGrainStartPositionControlValue;
 	int64 mGrainCurrentPositionRelativeLeft;
 	int64 mGrainCurrentPositionRelativeRight;
 	int64 mGrainCurrentPositionRelative[2];
@@ -58,7 +61,7 @@ private:
 	float mRandomReadPosition; //between 0.0f and 1.0f
 	float mRandomStartPosition; //between 0.0f and 1.0f
 	bool  mRenderMono;
-	
+	bool  mBypass;
 	float* mLeftChannelData;
 	float* mRightChannelData;
 	float* mData[2];
