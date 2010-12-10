@@ -543,7 +543,20 @@ bool MainComponent::renderAudioToBuffer(float** outputChannelData, int numOutput
 	{
 		outofbounds = mGranularSlices[i]->renderAudioBlock(outputChannelData, numOutputChannels, numSamples);
 		if (outofbounds)
-			return true;
+			outofbounds = true;
+	}
+	
+	//clip output so you don't exceed digital max
+	 for (int i = 0; i < numOutputChannels; ++i)
+	{
+		float *output = outputChannelData[i];
+		for (int j=0; j<numSamples; ++j)
+		{
+			if (output[j] > 1.0f)
+				output[j] = 1.0f;
+			else if (output[j] < -1.0f)
+				output[j] = -1.0f;
+		}
 	}
 	return outofbounds;
 }

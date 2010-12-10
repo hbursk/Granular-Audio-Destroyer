@@ -28,7 +28,7 @@
 #include "MainEditor.h"
 //[/Headers]
 
-#define NUM_GRAINS 1
+#define NUM_GRAINS 8
 
 //==============================================================================
 /**

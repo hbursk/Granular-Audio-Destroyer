@@ -21,7 +21,9 @@ MainAppWindow::MainAppWindow()
 	MainComponent* const contentComponent = new MainComponent();
 	setContentComponent (contentComponent, true, true);
     centreWithSize (1024, 795);
-    setVisible (true);
+    setUsingNativeTitleBar(true);
+	setVisible (true);
+	
 	
 }
 
