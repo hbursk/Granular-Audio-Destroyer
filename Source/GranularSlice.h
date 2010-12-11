@@ -50,7 +50,9 @@ private:
 	
 	int64 mGrainLength;
 	int64 mGrainStartPositionAbsolute;
+
 	int64 mGrainStartPositionControlValue;
+	int64 mGrainRandomPositionAbsolute[2];
 	int64 mGrainCurrentPositionRelativeLeft;
 	int64 mGrainCurrentPositionRelativeRight;
 	int64 mGrainCurrentPositionRelative[2];
