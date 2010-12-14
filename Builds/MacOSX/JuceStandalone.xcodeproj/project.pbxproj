@@ -23,7 +23,8 @@
 		A2E44BFE6854C296EFC7ACE2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B64F38603F03FEF90DE8308 /* Cocoa.framework */; };
 		CAA0BE9512AF03D9009DE2E4 /* GranularSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0BE9412AF03D9009DE2E4 /* GranularSlice.cpp */; };
 		CAA0C00612B06E61009DE2E4 /* MainEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0C00412B06E61009DE2E4 /* MainEditor.cpp */; };
-		CAA0C16012B0C157009DE2E4 /* MainComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0C15F12B0C157009DE2E4 /* MainComponent.cpp */; };
+		CAA0C16012B0C157009DE2E4 /* MainController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0C15F12B0C157009DE2E4 /* MainController.cpp */; };
+		CAAA422112B693A60063C8AB /* ParameterMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAAA422012B693A60063C8AB /* ParameterMessage.cpp */; };
 		D180A200AC0A15B75E9C0862 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A625967612CDE6C42EF66702 /* OpenGL.framework */; };
 		DADE4501FDEA728923548866 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7B23EF196E1B9C6415C569 /* QTKit.framework */; };
 		FE081651FCBF2DB607514C50 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ABA738CA921707A610D4F9C /* Carbon.framework */; };
@@ -52,8 +53,10 @@
 		CAA0BE9412AF03D9009DE2E4 /* GranularSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GranularSlice.cpp; path = ../../Source/GranularSlice.cpp; sourceTree = "<group>"; };
 		CAA0C00412B06E61009DE2E4 /* MainEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainEditor.cpp; path = ../../Source/MainEditor.cpp; sourceTree = SOURCE_ROOT; };
 		CAA0C00512B06E61009DE2E4 /* MainEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainEditor.h; path = ../../Source/MainEditor.h; sourceTree = SOURCE_ROOT; };
-		CAA0C15F12B0C157009DE2E4 /* MainComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainComponent.cpp; path = ../../Source/MainComponent.cpp; sourceTree = SOURCE_ROOT; };
-		CAC504A012A782BC00DC7BBB /* MainComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainComponent.h; path = ../../Source/MainComponent.h; sourceTree = SOURCE_ROOT; };
+		CAA0C15F12B0C157009DE2E4 /* MainController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MainController.cpp; path = ../../Source/MainController.cpp; sourceTree = SOURCE_ROOT; };
+		CAAA421F12B693A60063C8AB /* ParameterMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterMessage.h; path = ../../Source/ParameterMessage.h; sourceTree = SOURCE_ROOT; };
+		CAAA422012B693A60063C8AB /* ParameterMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParameterMessage.cpp; path = ../../Source/ParameterMessage.cpp; sourceTree = SOURCE_ROOT; };
+		CAC504A012A782BC00DC7BBB /* MainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainController.h; path = ../../Source/MainController.h; sourceTree = SOURCE_ROOT; };
 		CB42FF027A87347C3128B2E6 /* JuceLibraryCode1.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode1.mm; path = ../../JuceLibraryCode/JuceLibraryCode1.mm; sourceTree = SOURCE_ROOT; };
 		ECB9F35916340C9E1FE553DD /* DiscRecording.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiscRecording.framework; path = System/Library/Frameworks/DiscRecording.framework; sourceTree = SDKROOT; };
 		FB7086188552BD1BFA92A66C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -146,13 +149,15 @@
 			children = (
 				CAA0C00412B06E61009DE2E4 /* MainEditor.cpp */,
 				CAA0C00512B06E61009DE2E4 /* MainEditor.h */,
-				CAA0C15F12B0C157009DE2E4 /* MainComponent.cpp */,
-				CAC504A012A782BC00DC7BBB /* MainComponent.h */,
+				CAA0C15F12B0C157009DE2E4 /* MainController.cpp */,
+				CAC504A012A782BC00DC7BBB /* MainController.h */,
 				C8B25CE4CD6412D0435D28CF /* MainWindow.cpp */,
 				70FDB921D33EF51A6849DA9D /* MainWindow.h */,
 				6B948C4CB4EFDB39E2621DD3 /* Main.cpp */,
 				CAA0BE9312AF03D9009DE2E4 /* GranularSlice.h */,
 				CAA0BE9412AF03D9009DE2E4 /* GranularSlice.cpp */,
+				CAAA421F12B693A60063C8AB /* ParameterMessage.h */,
+				CAAA422012B693A60063C8AB /* ParameterMessage.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -225,7 +230,8 @@
 				57F207C6976D2D15B7BD8602 /* JuceLibraryCode4.mm in Sources */,
 				CAA0BE9512AF03D9009DE2E4 /* GranularSlice.cpp in Sources */,
 				CAA0C00612B06E61009DE2E4 /* MainEditor.cpp in Sources */,
-				CAA0C16012B0C157009DE2E4 /* MainComponent.cpp in Sources */,
+				CAA0C16012B0C157009DE2E4 /* MainController.cpp in Sources */,
+				CAAA422112B693A60063C8AB /* ParameterMessage.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,14 +23,15 @@
 //[/Headers]
 
 #include "MainEditor.h"
-#include "MainComponent.h"
+#include "MainController.h"
+#include "ParameterMessage.h"
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
 //==============================================================================
-MainEditor::MainEditor (Component *comp)
-    : mMainComponent(comp),
+MainEditor::MainEditor (MainController *messageListener)
+    : mMessageListener(messageListener),
 	  mSliceChooserBox (0),
       mGainSlider (0),
       mGainLabel (0),
@@ -260,6 +261,38 @@ MainEditor::~MainEditor()
     //[/Destructor]
 }
 
+void MainEditor::handleMessage(const Message &message)
+{
+	const ParameterMessage &msg = (const ParameterMessage&)message;
+	//handle message here and do the right stuff
+	String command = msg.mStringCommand;
+	float floatParameter = msg.mFloatParameter;
+	if (command.compare(T("GRAIN_GAIN"))==0)
+	{
+		mGainSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_PAN"))==0)
+	{
+		mPanSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_LENGTH"))==0)
+	{
+		mGrainLengthSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_START"))==0)
+	{
+		mGrainStartSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_ADVANCE"))==0)
+	{
+		mGrainAdvanceSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_VELOCITY"))==0)
+	{
+		mGrainVelocitySlider->setValue(floatParameter, false, false);
+	}
+}
+
 //==============================================================================
 void MainEditor::paint (Graphics& g)
 {
@@ -338,11 +371,11 @@ void MainEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     if (comboBoxThatHasChanged == mSliceChooserBox)
     {
         //[UserComboBoxCode_mSliceChooserBox] -- add your combo box handling code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
 		int idvalue = comboBoxThatHasChanged->getSelectedId();
 		if (idvalue != 0)
 			idvalue--;
-		mc->setCurrentSliceIndex(idvalue);
+		ParameterMessage *msg = new ParameterMessage(0, T("SLICE_INDEX_CHANGED"), idvalue);
+		mMessageListener->postMessage(msg);
         //[/UserComboBoxCode_mSliceChooserBox]
     }
 
@@ -358,43 +391,43 @@ void MainEditor::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == mGainSlider)
     {
         //[UserSliderCode_mGainSlider] -- add your slider handling code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->setGrainGain(sliderThatWasMoved->getValue());
+		ParameterMessage *msg = new ParameterMessage(sliderThatWasMoved->getValue(), T("GRAIN_GAIN_CHANGED"));
+		mMessageListener->postMessage(msg);
         //[/UserSliderCode_mGainSlider]
     }
     else if (sliderThatWasMoved == mPanSlider)
     {
         //[UserSliderCode_mPanSlider] -- add your slider handling code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->setGrainPan(sliderThatWasMoved->getValue());
+		ParameterMessage *msg = new ParameterMessage(sliderThatWasMoved->getValue(), T("GRAIN_PAN_CHANGED"));
+		mMessageListener->postMessage(msg);
         //[/UserSliderCode_mPanSlider]
     }
     else if (sliderThatWasMoved == mGrainLengthSlider)
     {
         //[UserSliderCode_mGrainLengthSlider] -- add your slider handling code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->setGrainLength(sliderThatWasMoved->getValue());
+		ParameterMessage *msg = new ParameterMessage(sliderThatWasMoved->getValue(), T("GRAIN_LENGTH_CHANGED"));
+		mMessageListener->postMessage(msg);
         //[/UserSliderCode_mGrainLengthSlider]
     }
     else if (sliderThatWasMoved == mGrainStartSlider)
     {
         //[UserSliderCode_mGrainStartSlider] -- add your slider handling code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->setGrainStartPosition(sliderThatWasMoved->getValue());
+		ParameterMessage *msg = new ParameterMessage(sliderThatWasMoved->getValue(), T("GRAIN_START_CHANGED"));
+		mMessageListener->postMessage(msg);
         //[/UserSliderCode_mGrainStartSlider]
     }
     else if (sliderThatWasMoved == mGrainAdvanceSlider)
     {
         //[UserSliderCode_mGrainAdvanceSlider] -- add your slider handling code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->setGrainAdvanceAmount(sliderThatWasMoved->getValue());
+		ParameterMessage *msg = new ParameterMessage(sliderThatWasMoved->getValue(), T("GRAIN_ADVANCE_CHANGED"));
+		mMessageListener->postMessage(msg);
         //[/UserSliderCode_mGrainAdvanceSlider]
     }
     else if (sliderThatWasMoved == mGrainVelocitySlider)
     {
         //[UserSliderCode_mGrainVelocitySlider] -- add your slider handling code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->setGrainVelocityFactor(sliderThatWasMoved->getValue());
+		ParameterMessage *msg = new ParameterMessage(sliderThatWasMoved->getValue(), T("GRAIN_VELOCITY_CHANGED"));
+		mMessageListener->postMessage(msg);
         //[/UserSliderCode_mGrainVelocitySlider]
     }
 
@@ -410,21 +443,21 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == mOpenFileButton)
     {
         //[UserButtonCode_mOpenFileButton] -- add your button handler code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->openFilePressed();
+		ParameterMessage *msg = new ParameterMessage(1, T("OPEN_FILE_PRESSED"), 1);
+		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mOpenFileButton]
     }
     else if (buttonThatWasClicked == mSaveFileButton)
     {
         //[UserButtonCode_mSaveFileButton] -- add your button handler code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
-		mc->saveFilePressed();
+		ParameterMessage *msg = new ParameterMessage(1, T("SAVE_FILE_PRESSED"), 1);
+		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mSaveFileButton]
     }
     else if (buttonThatWasClicked == mPlayButton)
     {
         //[UserButtonCode_mPlayButton] -- add your button handler code here..
-		MainComponent *mc = (MainComponent*)mMainComponent;
+		MainController *mc = (MainController*)mMessageListener;
 		mc->playPressed();
 		if (mc->isPlaying())
 		{

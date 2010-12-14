@@ -38,14 +38,14 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class MainComponent  : public Component,
-					   public AudioIODeviceCallback
+class MainController  : public AudioIODeviceCallback,
+					    public MessageListener
 
 {
 public:
     //==============================================================================
-    MainComponent ();
-    ~MainComponent();
+    MainController ();
+    ~MainController();
 
     //==============================================================================
     //[UserMethods] -- You can add your own custom methods in this section.
@@ -84,6 +84,12 @@ public:
 	void setupGranularSlices();
 	bool renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples);
 	
+	void updateGUIParameters();
+	
+	//MessageListener
+	virtual void handleMessage(const Message &message);
+	
+	void setEditor(MainEditor *editor);
     //[/UserMethods]
 
     void paint (Graphics& g);
@@ -139,8 +145,8 @@ private:
 	
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)
-    MainComponent (const MainComponent&);
-    const MainComponent& operator= (const MainComponent&);
+    MainController (const MainController&);
+    const MainController& operator= (const MainController&);
 };
 
 

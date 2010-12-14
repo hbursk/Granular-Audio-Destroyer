@@ -9,7 +9,8 @@
 */
 
 #include "MainWindow.h"
-#include "MainComponent.h"
+#include "MainController.h"
+#include "MainEditor.h"
 
 
 //==============================================================================
@@ -18,7 +19,9 @@ MainAppWindow::MainAppWindow()
                       Colours::lightgrey,
                       DocumentWindow::allButtons)
 {
-	MainComponent* const contentComponent = new MainComponent();
+	mMainController = new MainController();
+	MainEditor* const contentComponent = new MainEditor(mMainController);
+	mMainController->setEditor((MainEditor*)contentComponent);
 	setContentComponent (contentComponent, true, true);
     centreWithSize (1024, 768); //+ getTitleBarHeight());
     setUsingNativeTitleBar(true);
@@ -29,7 +32,7 @@ MainAppWindow::MainAppWindow()
 
 MainAppWindow::~MainAppWindow()
 {
-	//delete(contentComponent);
+	delete mMainController;
 }
 
 void MainAppWindow::closeButtonPressed()

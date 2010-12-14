@@ -26,7 +26,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 //[/Headers]
 
-
+class MainController;
 
 //==============================================================================
 /**
@@ -43,11 +43,12 @@ class MainEditor  : public Component,
 {
 public:
     //==============================================================================
-    MainEditor (Component *comp);
+    MainEditor (MainController *messageListener);
     ~MainEditor();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+	virtual void handleMessage(const Message &message);
     //[/UserMethods]
 
     void paint (Graphics& g);
@@ -64,8 +65,10 @@ public:
     juce_UseDebuggingNewOperator
 
 private:
+	friend class MainController;
     //[UserVariables]   -- You can add your own custom variables in this section.
-	Component* mMainComponent;
+	MainController *mMessageListener;
+
     //[/UserVariables]
 
     //==============================================================================
@@ -87,7 +90,7 @@ private:
     TextButton* mSaveFileButton;
     TextButton* mPlayButton;
     Image* cachedImage_backdropgrid_png;
-
+	
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)
     MainEditor (const MainEditor&);

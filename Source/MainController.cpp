@@ -22,7 +22,8 @@
 //[Headers] You can add your own extra header files here...
 //[/Headers]
 
-#include "MainComponent.h"
+#include "MainController.h"
+#include "ParameterMessage.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
@@ -39,7 +40,7 @@ const float kMaxVelocity = 3.0f;
 
 
 //==============================================================================
-MainComponent::MainComponent ()
+MainController::MainController ()
     : mMainEditor (0),
 	  mCurrentAudioFileSource(0),
 	  mInterleavedBuffer(0),
@@ -47,17 +48,12 @@ MainComponent::MainComponent ()
 	  mRightBuffer(0)
 {
 
-    //[UserPreSize]
-	addAndMakeVisible (mMainEditor = new MainEditor (this));
-	
+    //[UserPreSize]	
 	mDeviceManager.initialise (2, 2, 0, true, String::empty, 0);
 	mDeviceManager.addAudioCallback (&mAudioSourcePlayer);
     mAudioSourcePlayer.setSource (&mTransportSource);
     mCurrentAudioFileSource = 0;
     //[/UserPreSize]
-
-
-    setSize (1024, 768);
 
     //[Constructor] You can add your own custom stuff here..
 	//setup Grain variables for testing
@@ -66,10 +62,11 @@ MainComponent::MainComponent ()
 	{
 		mGranularSlices[i] = 0;
 	}
+	setupGranularSlices();
     //[/Constructor]
 }
 
-MainComponent::~MainComponent()
+MainController::~MainController()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
@@ -78,8 +75,6 @@ MainComponent::~MainComponent()
     //[/Destructor_pre]
 
     //[Destructor]. You can add your own custom destruction code here..
-	deleteAndZero (mMainEditor);
-
 	mTransportSource.setSource (0);
     mAudioSourcePlayer.setSource (0);
 
@@ -108,27 +103,9 @@ MainComponent::~MainComponent()
     //[/Destructor]
 }
 
-//==============================================================================
-void MainComponent::paint (Graphics& g)
-{
-    //[UserPrePaint] Add your own custom painting code here..
-    //[/UserPrePaint]
-
-    g.fillAll (Colours::white);
-
-    //[UserPaint] Add your own custom painting code here..
-    //[/UserPaint]
-}
-
-void MainComponent::resized()
-{
-    //[UserResized] Add your own custom resize handling here..
-    //[/UserResized]
-}
-
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 #pragma mark GUI Button Calls
-void MainComponent::playPressed()
+void MainController::playPressed()
 {
 	if (mLeftBuffer == 0)
 		return;
@@ -146,7 +123,7 @@ void MainComponent::playPressed()
 	}
 }
 
-void MainComponent::openFilePressed()
+void MainController::openFilePressed()
 {
 	if (mPlaying)
 	{
@@ -173,7 +150,7 @@ void MainComponent::openFilePressed()
 	}
 }
 
-void MainComponent::saveFilePressed()
+void MainController::saveFilePressed()
 {
 	if (mPlaying)
 	{
@@ -201,7 +178,7 @@ void MainComponent::saveFilePressed()
 	}
 }
 
-bool MainComponent::isPlaying()
+bool MainController::isPlaying()
 {
 	return mPlaying;
 }
@@ -209,19 +186,19 @@ bool MainComponent::isPlaying()
 #pragma mark GUI Parameter Functions
 //GUI parameters will all receive between 0.0f-1.0f for slider values
 //Up to this class to convert them and set them to usable values
-void  MainComponent::setCurrentSliceIndex(int index)
+void  MainController::setCurrentSliceIndex(int index)
 {
 	if (index > (NUM_GRAINS - 1))
 		index = 0;
 	mCurrentSliceIndex = index;
 }
 
-int   MainComponent::getCurrentSliceIndex()
+int   MainController::getCurrentSliceIndex()
 {
 	return mCurrentSliceIndex;
 }
 
-void  MainComponent::setGrainGain(float nvalue)
+void  MainController::setGrainGain(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
@@ -229,7 +206,7 @@ void  MainComponent::setGrainGain(float nvalue)
 	mGranularSlices[mCurrentSliceIndex]->setGain(gainvalue);
 }
 
-float MainComponent::getGrainGainSliderValue()
+float MainController::getGrainGainSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.5f;
@@ -238,28 +215,28 @@ float MainComponent::getGrainGainSliderValue()
 	return slidervalue;
 }
 
-float MainComponent::getGrainGain()
+float MainController::getGrainGain()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 1.0f;
 	return mGranularSlices[mCurrentSliceIndex]->getGain();
 }
 
-void  MainComponent::setGrainPan(float pan)
+void  MainController::setGrainPan(float pan)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
 	mGranularSlices[mCurrentSliceIndex]->setPan(pan);
 }
 
-float MainComponent::getGrainPan()
+float MainController::getGrainPan()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.5f;
 	return mGranularSlices[mCurrentSliceIndex]->getPan();
 }
 
-void  MainComponent::setGrainLength(float nvalue)
+void  MainController::setGrainLength(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
@@ -267,14 +244,14 @@ void  MainComponent::setGrainLength(float nvalue)
 	mGranularSlices[mCurrentSliceIndex]->setGrainLength(length);
 }
 
-int64 MainComponent::getGrainLength()
+int64 MainController::getGrainLength()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return kMinGrainLength;
 	return mGranularSlices[mCurrentSliceIndex]->getGrainLength();
 }
 
-float MainComponent::getGrainLengthSliderValue()
+float MainController::getGrainLengthSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
@@ -283,7 +260,7 @@ float MainComponent::getGrainLengthSliderValue()
 	return slidervalue;
 }
 
-void  MainComponent::setGrainStartPosition(float nvalue)
+void  MainController::setGrainStartPosition(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
@@ -291,14 +268,14 @@ void  MainComponent::setGrainStartPosition(float nvalue)
 	mGranularSlices[mCurrentSliceIndex]->setGrainStartPosition(startpos);
 }
 
-int64 MainComponent::getGrainStartPosition()
+int64 MainController::getGrainStartPosition()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
 	return mGranularSlices[mCurrentSliceIndex]->getGrainStartPosition();
 }
 
-float MainComponent::getGrainStartPositionSliderValue()
+float MainController::getGrainStartPositionSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
@@ -307,7 +284,7 @@ float MainComponent::getGrainStartPositionSliderValue()
 	return slidervalue;
 }
 
-void  MainComponent::setGrainAdvanceAmount(float nvalue)
+void  MainController::setGrainAdvanceAmount(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
@@ -315,14 +292,14 @@ void  MainComponent::setGrainAdvanceAmount(float nvalue)
 	mGranularSlices[mCurrentSliceIndex]->setGrainAdvanceAmount(advanceamount);
 }
 
-int64 MainComponent::getGrainAdvanceAmount()
+int64 MainController::getGrainAdvanceAmount()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0;
 	return mGranularSlices[mCurrentSliceIndex]->getGrainAdvanceAmount();
 }
 
-float MainComponent::getGrainAdvanceAmountSliderValue()
+float MainController::getGrainAdvanceAmountSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
@@ -331,7 +308,7 @@ float MainComponent::getGrainAdvanceAmountSliderValue()
 	return slidervalue;
 }
 
-void  MainComponent::setGrainVelocityFactor(float nvalue)
+void  MainController::setGrainVelocityFactor(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
@@ -339,14 +316,14 @@ void  MainComponent::setGrainVelocityFactor(float nvalue)
 	mGranularSlices[mCurrentSliceIndex]->setVelocity(velocity);
 }
 
-float MainComponent::getGrainVelocityFactor()
+float MainController::getGrainVelocityFactor()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
 	return mGranularSlices[mCurrentSliceIndex]->getVelocity();
 }
 
-float MainComponent::getGrainVelocityFactorSliderValue()
+float MainController::getGrainVelocityFactorSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
@@ -356,7 +333,7 @@ float MainComponent::getGrainVelocityFactorSliderValue()
 }
 
 #pragma mark Custom Audio Functions
-void MainComponent::memStoreAudioFile(File &audioFile)
+void MainController::memStoreAudioFile(File &audioFile)
 {
 	//we only want raw samples, no header
 	AudioFormatManager formatManager;
@@ -400,7 +377,7 @@ void MainComponent::memStoreAudioFile(File &audioFile)
 	}
 }
 
-void MainComponent::setupGranularSlices()
+void MainController::setupGranularSlices()
 {
 	for (int i=0; i< NUM_GRAINS; i++)
 	{
@@ -409,17 +386,23 @@ void MainComponent::setupGranularSlices()
 			delete mGranularSlices[i];
 			mGranularSlices[i] = 0;
 		}
-		mGranularSlices[i] = new GranularSlice(mLeftBuffer, mRightBuffer, mBufferLength, mNumChannels);
+		int64 bufferlength = mBufferLength;
+		if (bufferlength == 0)
+			bufferlength = 44100;
+		int numchannels = mNumChannels;
+		if (numchannels == 0)
+			numchannels = 2;
+		mGranularSlices[i] = new GranularSlice(mLeftBuffer, mRightBuffer, bufferlength, numchannels);
 		//experimental settings here - will be controllable via GUI instead in the future
-		mGranularSlices[i]->setPan(1.0f*i/(1.0f*NUM_GRAINS));
-		mGranularSlices[i]->setGrainLength((i+1)*(44100/4));
-		mGranularSlices[i]->setGrainStartPosition(i*22050);
-		mGranularSlices[i]->setVelocity(1.0f*(i+1)*0.25f);
-		mGranularSlices[i]->setGrainAdvanceAmount((i+1)*22050/2);
+		mGranularSlices[i]->setPan(0.5f);
+		mGranularSlices[i]->setGrainLength(44100);
+		mGranularSlices[i]->setGrainStartPosition(0);
+		mGranularSlices[i]->setVelocity(1.0f);
+		mGranularSlices[i]->setGrainAdvanceAmount(0);
 	}
 }
 
-void MainComponent::saveAudioFile(File &saveFile)
+void MainController::saveAudioFile(File &saveFile)
 {
 	if (mLeftBuffer == 0) //nothing ever loaded, quit here
 		return;
@@ -466,7 +449,7 @@ void MainComponent::saveAudioFile(File &saveFile)
 	delete writer;	
 }
 
-void MainComponent::playAudioFile(File &audioFile)
+void MainController::playAudioFile(File &audioFile)
 {
  // unload the previous file source and delete it..
     mTransportSource.stop();
@@ -492,7 +475,7 @@ void MainComponent::playAudioFile(File &audioFile)
     }
 }
 
-void MainComponent::resetAudioRenderer()
+void MainController::resetAudioRenderer()
 {
 	for (int i=0; i< NUM_GRAINS; i++)
 	{
@@ -503,22 +486,28 @@ void MainComponent::resetAudioRenderer()
 	}
 }
 
+void MainController::setEditor(MainEditor *editor)
+{
+	mMainEditor = editor;
+	updateGUIParameters();
+}
+
 #pragma mark AudioIODeviceCallbacks
-void MainComponent::audioDeviceAboutToStart (AudioIODevice* device)
+void MainController::audioDeviceAboutToStart (AudioIODevice* device)
 {
     zeromem (samples, sizeof (samples));
 	mPlaying = true;
 	//mPlayButton->setButtonText(T("Stop"));
 }
 
-void MainComponent::audioDeviceStopped()
+void MainController::audioDeviceStopped()
 {
     zeromem (samples, sizeof (samples));
 	mPlaying = false;
 	//mPlayButton->setButtonText(T("Play"));
 }
 
-void MainComponent::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
+void MainController::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
 												 float** outputChannelData, int numOutputChannels, int numSamples)
 {
 	
@@ -529,7 +518,71 @@ void MainComponent::audioDeviceIOCallback (const float** inputChannelData, int n
 	}
 }
 
-bool MainComponent::renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples)
+#pragma mark MessageListener
+void MainController::handleMessage(const Message &message)
+{
+	const ParameterMessage &msg = (const ParameterMessage&)message;
+	//handle message here and do the right stuff
+	String command = msg.mStringCommand;
+	float floatParameter = msg.mFloatParameter;
+	int intParameter = msg.mIntParameter;
+	if (command.compare(T("GRAIN_GAIN_CHANGED"))==0)
+	{
+		setGrainGain(floatParameter);
+	}
+	else if (command.compare(T("GRAIN_PAN_CHANGED"))==0)
+	{
+		setGrainPan(floatParameter);
+	}
+	else if (command.compare(T("GRAIN_LENGTH_CHANGED"))==0)
+	{
+		setGrainLength(floatParameter);
+	}
+	else if (command.compare(T("GRAIN_START_CHANGED"))==0)
+	{
+		setGrainStartPosition(floatParameter);
+	}
+	else if (command.compare(T("GRAIN_ADVANCE_CHANGED"))==0)
+	{
+		setGrainAdvanceAmount(floatParameter);
+	}
+	else if (command.compare(T("GRAIN_VELOCITY_CHANGED"))==0)
+	{
+		setGrainVelocityFactor(floatParameter);
+	}
+	else if (command.compare(T("OPEN_FILE_PRESSED"))==0)
+	{
+		openFilePressed();
+	}
+	else if (command.compare(T("SAVE_FILE_PRESSED"))==0)
+	{
+		saveFilePressed();
+	}
+	else if (command.compare(T("SLICE_INDEX_CHANGED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+}
+
+void MainController::updateGUIParameters()
+{
+	ParameterMessage *parammsg = new ParameterMessage(getGrainGainSliderValue(), T("GRAIN_GAIN"));
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(getGrainPan(), T("GRAIN_PAN"));
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(getGrainLengthSliderValue(), T("GRAIN_LENGTH"));
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(getGrainStartPositionSliderValue(), T("GRAIN_START"));
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(getGrainAdvanceAmountSliderValue(), T("GRAIN_ADVANCE"));
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(getGrainVelocityFactorSliderValue(), T("GRAIN_VELOCITY"));
+	mMainEditor->postMessage(parammsg);
+}
+
+bool MainController::renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples)
 {
 	// We need to clear the output buffers, in case they're full of junk..
     for (int i = 0; i < numOutputChannels; ++i)
@@ -571,7 +624,7 @@ bool MainComponent::renderAudioToBuffer(float** outputChannelData, int numOutput
 
 BEGIN_JUCER_METADATA
 
-<JUCER_COMPONENT documentType="Component" className="MainComponent" componentName=""
+<JUCER_COMPONENT documentType="Component" className="MainController" componentName=""
                  parentClasses="public Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330000013"
                  fixedSize="0" initialWidth="600" initialHeight="400">

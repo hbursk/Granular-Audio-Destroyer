@@ -13,6 +13,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+class MainController;
+
 
 //==============================================================================
 class MainAppWindow   : public DocumentWindow
@@ -36,6 +38,7 @@ public:
     juce_UseDebuggingNewOperator
 
 private:
+	MainController* mMainController;
     MainAppWindow (const MainAppWindow&);
     MainAppWindow& operator= (const MainAppWindow&);
 };
