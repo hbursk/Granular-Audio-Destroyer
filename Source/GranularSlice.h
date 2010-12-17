@@ -64,10 +64,10 @@ private:
 	float mRandomStartPosition; //between 0.0f and 1.0f
 	bool  mRenderMono;
 	bool  mBypass;
+	bool  mReversed;
 	float* mLeftChannelData;
 	float* mRightChannelData;
 	float* mData[2];
 	int64  mDataLength;
 	int	   mNumChannels;
-
 };
