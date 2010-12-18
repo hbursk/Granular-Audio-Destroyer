@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  8 Dec 2010 6:42:00pm
+  Creation date:  18 Dec 2010 3:30:58am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,11 +19,12 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_MAINEDITOR_MAINEDITOR_F1FE5D23__
-#define __JUCER_HEADER_MAINEDITOR_MAINEDITOR_F1FE5D23__
+#ifndef __JUCER_HEADER_MAINEDITOR_MAINEDITOR_54B5D358__
+#define __JUCER_HEADER_MAINEDITOR_MAINEDITOR_54B5D358__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
+
 //[/Headers]
 
 class MainController;
@@ -43,7 +44,7 @@ class MainEditor  : public Component,
 {
 public:
     //==============================================================================
-    MainEditor (MainController *messageListener);
+    MainEditor (MainController *controller);
     ~MainEditor();
 
     //==============================================================================
@@ -60,37 +61,56 @@ public:
     // Binary resources:
     static const char* backdropgrid_png;
     static const int backdropgrid_pngSize;
+    static const char* granularbackdropcropped_png;
+    static const int granularbackdropcropped_pngSize;
+    static const char* offon_btn_idle_png;
+    static const int offon_btn_idle_pngSize;
+    static const char* offon_btn_press_png;
+    static const int offon_btn_press_pngSize;
+    static const char* open_btn_idle_png;
+    static const int open_btn_idle_pngSize;
+    static const char* open_btn_press_png;
+    static const int open_btn_press_pngSize;
+    static const char* play_btn_idle_png;
+    static const int play_btn_idle_pngSize;
+    static const char* play_btn_press_png;
+    static const int play_btn_press_pngSize;
+    static const char* record_btn_idle_png;
+    static const int record_btn_idle_pngSize;
+    static const char* record_btn_press_png;
+    static const int record_btn_press_pngSize;
 
     //==============================================================================
     juce_UseDebuggingNewOperator
 
 private:
-	friend class MainController;
     //[UserVariables]   -- You can add your own custom variables in this section.
+	//friend class MainController;
+	friend class MainController;
 	MainController *mMessageListener;
 
     //[/UserVariables]
 
     //==============================================================================
     ComboBox* mSliceChooserBox;
-    Slider* mGainSlider;
-    Label* mGainLabel;
     Slider* mPanSlider;
-    Label* mPanLabel;
-    Slider* mGrainLengthSlider;
-    Label* mGrainSizeLabel;
-    Label* mGainLabel2;
-    Slider* mGrainStartSlider;
-    Label* mGrainStartLabel;
-    Slider* mGrainAdvanceSlider;
-    Label* mGrainAdvanceLabel;
-    Slider* mGrainVelocitySlider;
-    Label* mGrainVelocityLabel;
-    TextButton* mOpenFileButton;
     TextButton* mSaveFileButton;
-    TextButton* mPlayButton;
-    Image* cachedImage_backdropgrid_png;
-	
+    Slider* mGainSlider;
+    Slider* mGrainLengthSlider;
+    Slider* mGrainStartSlider;
+    Slider* mGrainAdvanceSlider;
+    Slider* mGrainVelocitySlider;
+    Slider* mGrainLengthRandomSlider;
+    Slider* mGrainStartRandomSlider;
+    Slider* mGrainAdvanceRandomSlider;
+    Slider* mVelocityFactorRandomSlider;
+    ImageButton* mActiveButton;
+    ImageButton* mMonoButton;
+    ImageButton* mPlayButton;
+    ImageButton* mOpenFileButton;
+    ImageButton* mRecordButton;
+    Image* cachedImage_granularbackdropcropped_png;
+
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)
     MainEditor (const MainEditor&);
@@ -98,4 +118,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_MAINEDITOR_MAINEDITOR_F1FE5D23__
+#endif   // __JUCER_HEADER_MAINEDITOR_MAINEDITOR_54B5D358__
