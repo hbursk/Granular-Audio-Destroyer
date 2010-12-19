@@ -62,7 +62,7 @@ MainController::MainController ()
 	{
 		mGranularSlices[i] = 0;
 	}
-	setupGranularSlices();
+	setupGranularSlices(true);
     //[/Constructor]
 }
 
@@ -140,7 +140,7 @@ void MainController::openFilePressed()
 	FileChooserDialogBox dialogBox ("Open a Wave File",
 									"Please choose a Wave file to open...",
 									browser, true,
-									Colours::lightgrey);
+									Colour (0xc65e5c57));
 
 	if (dialogBox.show())
 	{
@@ -332,6 +332,20 @@ float MainController::getGrainVelocityFactorSliderValue()
 	return slidervalue;
 }
 
+void  MainController::setGrainStartRandomAmount(float nvalue)
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return;
+	mGranularSlices[mCurrentSliceIndex]->setRandomReadFactor(nvalue);
+}
+
+float MainController::getGrainStartRandomAmount()
+{
+	if (mGranularSlices[mCurrentSliceIndex] == 0)
+		return 0.0f;
+	return mGranularSlices[mCurrentSliceIndex]->getGrainStartRandomFactor();
+}
+
 #pragma mark Custom Audio Functions
 void MainController::memStoreAudioFile(File &audioFile)
 {
@@ -373,32 +387,29 @@ void MainController::memStoreAudioFile(File &audioFile)
 		}
 		delete reader;
 		
-		setupGranularSlices();
+		setupGranularSlices(false);
 	}
 }
 
-void MainController::setupGranularSlices()
+void MainController::setupGranularSlices(bool reset)
 {
 	for (int i=0; i< NUM_GRAINS; i++)
 	{
-		if (mGranularSlices[i] != 0)
-		{
-			delete mGranularSlices[i];
-			mGranularSlices[i] = 0;
-		}
+		
 		int64 bufferlength = mBufferLength;
 		if (bufferlength == 0)
 			bufferlength = 44100;
 		int numchannels = mNumChannels;
 		if (numchannels == 0)
 			numchannels = 2;
-		mGranularSlices[i] = new GranularSlice(mLeftBuffer, mRightBuffer, bufferlength, numchannels);
-		//experimental settings here - will be controllable via GUI instead in the future
-		mGranularSlices[i]->setPan(0.5f);
-		mGranularSlices[i]->setGrainLength(44100);
-		mGranularSlices[i]->setGrainStartPosition(0);
-		mGranularSlices[i]->setVelocity(1.0f);
-		mGranularSlices[i]->setGrainAdvanceAmount(0);
+		if (mGranularSlices[i] == 0)
+		{
+			mGranularSlices[i] = new GranularSlice(mLeftBuffer, mRightBuffer, bufferlength, numchannels, true);
+		}
+		else
+		{
+			mGranularSlices[i]->setData(mLeftBuffer, mRightBuffer, bufferlength, numchannels, reset);
+		}
 	}
 }
 
@@ -550,6 +561,10 @@ void MainController::handleMessage(const Message &message)
 	{
 		setGrainVelocityFactor(floatParameter);
 	}
+	else if (command.compare(T("GRAIN_START_RANDOM_CHANGED"))==0)
+	{
+		setGrainStartRandomAmount(floatParameter);
+	}
 	else if (command.compare(T("OPEN_FILE_PRESSED"))==0)
 	{
 		openFilePressed();
@@ -579,6 +594,8 @@ void MainController::updateGUIParameters()
 	parammsg = new ParameterMessage(getGrainAdvanceAmountSliderValue(), T("GRAIN_ADVANCE"));
 	mMainEditor->postMessage(parammsg);
 	parammsg = new ParameterMessage(getGrainVelocityFactorSliderValue(), T("GRAIN_VELOCITY"));
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(getGrainStartRandomAmount(), T("GRAIN_START_RANDOM"));
 	mMainEditor->postMessage(parammsg);
 }
 

@@ -12,8 +12,11 @@
 class GranularSlice
 {
 public:
-	GranularSlice(float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels);
+	GranularSlice(float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels, bool reset);
 	~GranularSlice();
+	
+	void resetDefaults();
+	void setData(float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels, bool reset);
 	//setters
 	void setGain(float gain);
 	void setPan(float pan);
@@ -35,6 +38,7 @@ public:
 	float getVelocity();
 	int64 getGrainAdvanceAmount();
 	bool  isBypass();
+	float getGrainStartRandomFactor();
 	
 	int64 getDataLength();
 	void resetAudioPlayback();

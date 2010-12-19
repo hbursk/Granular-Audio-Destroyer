@@ -19,9 +19,26 @@ const int64 kSampleRamp = 128;
 const int64 kQuickRamp = 80;
 const int kGrainRandPosition = 20000;
 
-GranularSlice::GranularSlice (float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels)
+GranularSlice::GranularSlice (float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels, bool reset)
 	: mLeftChannelData (leftchanneldata),
 	  mRightChannelData (rightchanneldata)
+{	
+	if (reset)
+		resetDefaults();
+	mDataLength = datalength;
+	mNumChannels = numchannels;
+
+	mData[0] = mLeftChannelData;
+	mData[1] = mRightChannelData;
+
+}
+
+GranularSlice::~GranularSlice ()
+{
+
+}
+
+void GranularSlice::resetDefaults()
 {
 	mGain = 1.0f;
 	mPan = 0.5f;//center
@@ -43,23 +60,23 @@ GranularSlice::GranularSlice (float* leftchanneldata, float* rightchanneldata, i
 	mVelocityFactor = kVelocityFactor;	//higher is slower moving through audio file
 	mGrainAdvanceAmount = kGrainAdvanceAmount;//how many samples the window will advance through the audio file
 	mSampleAdvanceAmount = 1; //normally 1, could be -1 for reverse
-	mRandomReadPosition = 1.0f; //between 0.0f and 1.0f
+	mRandomReadPosition = 0.0f; //between 0.0f and 1.0f
 	mRandomStartPosition = 0.0f; //between 0.0f and 1.0f
 	mRenderMono = false;
 	mBypass = false;
-	mReversed = true;
-	
-	mDataLength = datalength;
-	mNumChannels = numchannels;
-
-	mData[0] = mLeftChannelData;
-	mData[1] = mRightChannelData;
-
+	mReversed = false;
 }
 
-GranularSlice::~GranularSlice ()
+void GranularSlice::setData(float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels, bool reset)
 {
-
+	if (reset)
+		resetDefaults();
+	mDataLength = datalength;
+	mNumChannels = numchannels;
+	mLeftChannelData = leftchanneldata;
+	mRightChannelData = rightchanneldata;
+	mData[0] = mLeftChannelData;
+	mData[1] = mRightChannelData;
 }
 
 void GranularSlice::setGain (float gain)
@@ -165,6 +182,11 @@ bool GranularSlice::isBypass()
 	return mBypass;
 }
 
+float GranularSlice::getGrainStartRandomFactor()
+{
+	return mRandomReadPosition;
+}
+
 void GranularSlice::resetAudioPlayback()
 {
 	mGrainCurrentPositionRelativeLeft = 0;
@@ -185,7 +207,7 @@ int64 GranularSlice::getDataLength()
 bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int numSamples)
 {
 	//do nothing if bypassed
-	if (mBypass)
+	if (mBypass)// || mGain == 0) //shoud still render if Gain is 0 since positions need to be advanced
 		return false;
 	// The outputData pointer could have existing audio in it.  Mix into that. 
 	// Store this locally so that they won't change during an audio buffer render - psuedo variable lock 
@@ -199,7 +221,7 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 		int samplesToRead = numSamples;
 
 		grainPositionAbsolute = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i];
-
+		
 		for (int j=0; j<samplesToRead; ++j)
 		{
 			int samppos = grainPositionAbsolute + mGrainCurrentPositionRelative[i];

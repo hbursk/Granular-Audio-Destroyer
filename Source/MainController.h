@@ -76,12 +76,14 @@ public:
 	void  setGrainVelocityFactor(float nvalue);
 	float getGrainVelocityFactor();
 	float getGrainVelocityFactorSliderValue();
+	void  setGrainStartRandomAmount(float nvalue);
+	float getGrainStartRandomAmount();
 	
 	void playAudioFile(File &audioFile);
 	void memStoreAudioFile(File &audioFile);
 	void saveAudioFile(File &saveFile);
 	void resetAudioRenderer();
-	void setupGranularSlices();
+	void setupGranularSlices(bool reset);
 	bool renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples);
 	
 	void updateGUIParameters();
