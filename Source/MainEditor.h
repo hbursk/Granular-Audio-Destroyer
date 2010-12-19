@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  18 Dec 2010 3:30:58am
+  Creation date:  19 Dec 2010 2:37:44am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,15 +19,15 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_MAINEDITOR_MAINEDITOR_54B5D358__
-#define __JUCER_HEADER_MAINEDITOR_MAINEDITOR_54B5D358__
+#ifndef __JUCER_HEADER_MAINEDITOR_MAINEDITOR_CFA4DFB9__
+#define __JUCER_HEADER_MAINEDITOR_MAINEDITOR_CFA4DFB9__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
-
+class MainController;
 //[/Headers]
 
-class MainController;
+
 
 //==============================================================================
 /**
@@ -44,12 +44,15 @@ class MainEditor  : public Component,
 {
 public:
     //==============================================================================
+      //==============================================================================
+    //[UserMethods]     -- You can add your own custom methods in this section.
     MainEditor (MainController *controller);
     ~MainEditor();
 
     //==============================================================================
-    //[UserMethods]     -- You can add your own custom methods in this section.
+
 	virtual void handleMessage(const Message &message);
+	void selectRadioPressed(int index);
     //[/UserMethods]
 
     void paint (Graphics& g);
@@ -59,8 +62,6 @@ public:
     void buttonClicked (Button* buttonThatWasClicked);
 
     // Binary resources:
-    static const char* backdropgrid_png;
-    static const int backdropgrid_pngSize;
     static const char* granularbackdropcropped_png;
     static const int granularbackdropcropped_pngSize;
     static const char* offon_btn_idle_png;
@@ -79,6 +80,42 @@ public:
     static const int record_btn_idle_pngSize;
     static const char* record_btn_press_png;
     static const int record_btn_press_pngSize;
+    static const char* _1_btn_idle_png;
+    static const int _1_btn_idle_pngSize;
+    static const char* _1_btn_press_png;
+    static const int _1_btn_press_pngSize;
+    static const char* _2_btn_idle_png;
+    static const int _2_btn_idle_pngSize;
+    static const char* _2_btn_press_png;
+    static const int _2_btn_press_pngSize;
+    static const char* _3_btn_idle_png;
+    static const int _3_btn_idle_pngSize;
+    static const char* _3_btn_press_png;
+    static const int _3_btn_press_pngSize;
+    static const char* _4_btn_idle_png;
+    static const int _4_btn_idle_pngSize;
+    static const char* _4_btn_press_png;
+    static const int _4_btn_press_pngSize;
+    static const char* _5_btn_idle_png;
+    static const int _5_btn_idle_pngSize;
+    static const char* _5_btn_press_png;
+    static const int _5_btn_press_pngSize;
+    static const char* _6_btn_idle_png;
+    static const int _6_btn_idle_pngSize;
+    static const char* _6_btn_press_png;
+    static const int _6_btn_press_pngSize;
+    static const char* _7_btn_idle_png;
+    static const int _7_btn_idle_pngSize;
+    static const char* _7_btn_press_png;
+    static const int _7_btn_press_pngSize;
+    static const char* _8_btn_idle_png;
+    static const int _8_btn_idle_pngSize;
+    static const char* _8_btn_press_png;
+    static const int _8_btn_press_pngSize;
+    static const char* offon_mini_idle_png;
+    static const int offon_mini_idle_pngSize;
+    static const char* offon_mini_press_png;
+    static const int offon_mini_press_pngSize;
 
     //==============================================================================
     juce_UseDebuggingNewOperator
@@ -109,6 +146,22 @@ private:
     ImageButton* mPlayButton;
     ImageButton* mOpenFileButton;
     ImageButton* mRecordButton;
+    ImageButton* mActiveButton1;
+    ImageButton* mActiveButton2;
+    ImageButton* mActiveButton3;
+    ImageButton* mActiveButton4;
+    ImageButton* mActiveButton5;
+    ImageButton* mActiveButton6;
+    ImageButton* mActiveButton7;
+    ImageButton* mActiveButton8;
+    ImageButton* mSelectButton1;
+    ImageButton* mSelectButton2;
+    ImageButton* mSelectButton3;
+    ImageButton* mSelectButton4;
+    ImageButton* mSelectButton5;
+    ImageButton* mSelectButton6;
+    ImageButton* mSelectButton7;
+    ImageButton* mSelectButton8;
     Image* cachedImage_granularbackdropcropped_png;
 
     //==============================================================================
@@ -118,4 +171,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_MAINEDITOR_MAINEDITOR_54B5D358__
+#endif   // __JUCER_HEADER_MAINEDITOR_MAINEDITOR_CFA4DFB9__

@@ -33,7 +33,7 @@ const float kMaxGain = 4.0f;
 const int64 kMinGrainLength = 220;
 const int64 kMaxGrainLength = 44100*2;
 const int64 kMinAdvance = 0;
-const int64 kMaxAdvance = 44100;
+const int64 kMaxAdvance = 44100*2;
 const float kMinVelocity = 0.0f;
 const float kMaxVelocity = 3.0f;
 
@@ -303,8 +303,8 @@ float MainController::getGrainAdvanceAmountSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
-	int64 advanceamount = getGrainAdvanceAmount();
-	float slidervalue = (advanceamount - kMinAdvance)/(kMaxAdvance - kMinAdvance);
+	float advanceamount = (float)getGrainAdvanceAmount();
+	float slidervalue = (1.0f*(advanceamount - kMinAdvance))/(1.0f*(kMaxAdvance - kMinAdvance));
 	return slidervalue;
 }
 
@@ -574,6 +574,54 @@ void MainController::handleMessage(const Message &message)
 		saveFilePressed();
 	}
 	else if (command.compare(T("SLICE_INDEX_CHANGED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT1_PRESSED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT2_PRESSED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT3_PRESSED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT4_PRESSED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT5_PRESSED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT6_PRESSED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT7_PRESSED"))==0)
+	{
+		setCurrentSliceIndex(intParameter);
+		//update view here
+		updateGUIParameters();
+	}
+	else if (command.compare(T("SELECT8_PRESSED"))==0)
 	{
 		setCurrentSliceIndex(intParameter);
 		//update view here
