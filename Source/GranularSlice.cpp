@@ -77,6 +77,7 @@ void GranularSlice::setData(float* leftchanneldata, float* rightchanneldata, int
 	mRightChannelData = rightchanneldata;
 	mData[0] = mLeftChannelData;
 	mData[1] = mRightChannelData;
+	mDataLengthPerChannel = datalength / numchannels;
 }
 
 void GranularSlice::setGain (float gain)
@@ -197,6 +198,11 @@ float GranularSlice::getGrainStartRandomFactor()
 	return mRandomReadPosition;
 }
 
+int64 GranularSlice::getDataLengthPerChannel()
+{
+	return mDataLengthPerChannel;
+}
+
 void GranularSlice::resetAudioPlayback()
 {
 	mGrainCurrentPositionRelativeLeft = 0;
@@ -245,12 +251,12 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 		for (int j=0; j<samplesToRead; ++j)
 		{
 			int samppos = grainPositionAbsolute + mGrainCurrentPositionRelative[i];
-			if (samppos >= mDataLength/mNumChannels) {
-				samppos = samppos - mDataLength/mNumChannels;
-			} else if (samppos < 0) {
-				samppos = mDataLength/mNumChannels + samppos;
-			}
-				
+
+			if (samppos >= mDataLengthPerChannel)
+				samppos = samppos - mDataLengthPerChannel;
+			else if (samppos < 0)
+				samppos = mDataLengthPerChannel + samppos;
+
 			output[j] += mData[i][samppos] * mGain * mPanGain[i];
 
 			/* This doesn't work with the reverse logic, will fix up ramping later
@@ -279,30 +285,24 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 
 			//if we've reached the end of the Grain Slice, loop back to start
 			if (abs(mGrainCurrentPositionRelative[i]) >= grainLength) {
-				int relativeStartPosition;
-
 				mGrainCurrentPositionRelative[i] = 0;
 				mGrainRandomPositionAbsolute[i] = (RAND_WEIGHT(kGrainRandPosition) * mRandomReadPosition);
 
-				relativeStartPosition = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i];
+				grainPositionAbsolute = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i];
 
 				// bound upper and lower limit on randomness affecting grain start sample position
-				// either set to 0 or datalength - the grain length.
-				if (relativeStartPosition < 0)
-					relativeStartPosition = mDataLength/mNumChannels + relativeStartPosition;
-				else if (relativeStartPosition >= mDataLength/mNumChannels)
-					relativeStartPosition = relativeStartPosition - mDataLength/mNumChannels;
-
-				grainPositionAbsolute = relativeStartPosition;
+				// modulo that ish.
+				grainPositionAbsolute %= mDataLengthPerChannel;
 			}
 		}
 	}
 
-
+/*
 	mSampleCounter += numSamples;
 	if (mSampleCounter >= (int64)(mGrainLength * mVelocityFactor) && (mVelocityFactor != 0))
 	{
 		mGrainStartPositionAbsolute += mGrainAdvanceAmount;
+		mGrainStartPositionAbsolute = mGrainStartPositionAbsolute % (mDataLengthPerChannel);
 		mSampleCounter = 0;
 		if (mGrainAdvanceAmount != 0)
 		{
@@ -310,6 +310,6 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 			mGrainCurrentPositionRelative[1] = 0;
 		}
 	}
-
+*/
 	return false;
 }
