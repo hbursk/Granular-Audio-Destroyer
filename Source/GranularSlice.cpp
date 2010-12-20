@@ -293,11 +293,13 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 				// bound upper and lower limit on randomness affecting grain start sample position
 				// modulo that ish.
 				grainPositionAbsolute %= mDataLengthPerChannel;
+				//hayden -also modulo that member ish
+				
 			}
 		}
 	}
 
-/*
+
 	mSampleCounter += numSamples;
 	if (mSampleCounter >= (int64)(mGrainLength * mVelocityFactor) && (mVelocityFactor != 0))
 	{
@@ -310,6 +312,6 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 			mGrainCurrentPositionRelative[1] = 0;
 		}
 	}
-*/
+
 	return false;
 }
