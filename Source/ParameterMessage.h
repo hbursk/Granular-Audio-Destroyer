@@ -38,13 +38,14 @@ class ParameterMessage  : public Message
 {
 public:
     //==============================================================================
-    ParameterMessage (float floatParameter, String stringCommand, int intParameter = 0, void* controlPtr = 0) throw();
+    ParameterMessage (float floatParameter, String stringCommand, int intParameter = 0, void* controlPtr = 0, String filePath = 0) throw();
     ~ParameterMessage() throw();
 
 	float  mFloatParameter;
 	int	   mIntParameter;
 	String mStringCommand;
 	void*  mControlPtr;
+	String mFilePath;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.

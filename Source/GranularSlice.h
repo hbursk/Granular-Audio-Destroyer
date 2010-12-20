@@ -30,6 +30,8 @@ public:
 	void setRandomStartFactor(float randamount);
 	void setRenderMono(bool mono);
 	void setBypass(bool bypass);
+	void setReverse(bool reverse);
+	void setMono(bool mono);
 	
 	float getGain();
 	float getPan();
@@ -39,6 +41,8 @@ public:
 	int64 getGrainAdvanceAmount();
 	bool  isBypass();
 	float getGrainStartRandomFactor();
+	bool  isReverse();
+	bool  isMono();
 	
 	int64 getDataLength();
 	void resetAudioPlayback();

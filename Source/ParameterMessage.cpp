@@ -9,11 +9,12 @@
 
 #include "ParameterMessage.h"
 
-ParameterMessage::ParameterMessage (float floatParameter, String stringCommand, int intParameter, void* controlPtr) throw()
+ParameterMessage::ParameterMessage (float floatParameter, String stringCommand, int intParameter, void* controlPtr, String filePath) throw()
     : mFloatParameter(floatParameter),
 	  mStringCommand(stringCommand),
 	  mIntParameter(intParameter),
-	  mControlPtr(controlPtr)
+	  mControlPtr(controlPtr),
+	  mFilePath(filePath)
 {
 
 }

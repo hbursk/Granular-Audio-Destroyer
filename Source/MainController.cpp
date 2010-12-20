@@ -146,6 +146,7 @@ void MainController::openFilePressed()
 	{
 		File mCurrentFile = browser.getSelectedFile(0);
 		memStoreAudioFile(mCurrentFile);
+		mMainEditor->setupWaveformView(mCurrentFile);
 		//mDeviceManager.addAudioCallback(this);
 	}
 }
@@ -537,6 +538,7 @@ void MainController::handleMessage(const Message &message)
 	String command = msg.mStringCommand;
 	float floatParameter = msg.mFloatParameter;
 	int intParameter = msg.mIntParameter;
+	String filePath = msg.mFilePath;
 	if (command.compare(T("GRAIN_GAIN_CHANGED"))==0)
 	{
 		setGrainGain(floatParameter);
@@ -579,53 +581,29 @@ void MainController::handleMessage(const Message &message)
 		//update view here
 		updateGUIParameters();
 	}
-	else if (command.compare(T("SELECT1_PRESSED"))==0)
+	else if (command.compare(T("SELECT_PRESSED"))==0)
 	{
 		setCurrentSliceIndex(intParameter);
 		//update view here
 		updateGUIParameters();
 	}
-	else if (command.compare(T("SELECT2_PRESSED"))==0)
+	else if (command.compare(T("ACTIVE_PRESSED"))==0)
 	{
-		setCurrentSliceIndex(intParameter);
-		//update view here
-		updateGUIParameters();
+		mGranularSlices[intParameter]->setBypass(!mGranularSlices[intParameter]->isBypass());
 	}
-	else if (command.compare(T("SELECT3_PRESSED"))==0)
-	{
-		setCurrentSliceIndex(intParameter);
-		//update view here
-		updateGUIParameters();
+	else if (command.compare(T("FILE_DROPPED"))==0)
+	{	
+		File mCurrentFile = File(filePath);
+		memStoreAudioFile(mCurrentFile);
+		mMainEditor->setupWaveformView(mCurrentFile);
 	}
-	else if (command.compare(T("SELECT4_PRESSED"))==0)
+	else if (command.compare(T("REVERSE_PRESSED"))==0)
 	{
-		setCurrentSliceIndex(intParameter);
-		//update view here
-		updateGUIParameters();
+		mGranularSlices[mCurrentSliceIndex]->setReverse(!mGranularSlices[mCurrentSliceIndex]->isReverse());
 	}
-	else if (command.compare(T("SELECT5_PRESSED"))==0)
-	{
-		setCurrentSliceIndex(intParameter);
-		//update view here
-		updateGUIParameters();
-	}
-	else if (command.compare(T("SELECT6_PRESSED"))==0)
-	{
-		setCurrentSliceIndex(intParameter);
-		//update view here
-		updateGUIParameters();
-	}
-	else if (command.compare(T("SELECT7_PRESSED"))==0)
-	{
-		setCurrentSliceIndex(intParameter);
-		//update view here
-		updateGUIParameters();
-	}
-	else if (command.compare(T("SELECT8_PRESSED"))==0)
-	{
-		setCurrentSliceIndex(intParameter);
-		//update view here
-		updateGUIParameters();
+	else if (command.compare(T("MONO_PRESSED"))==0)
+	{	
+		mGranularSlices[mCurrentSliceIndex]->setMono(!mGranularSlices[mCurrentSliceIndex]->isMono());
 	}
 }
 
@@ -644,6 +622,10 @@ void MainController::updateGUIParameters()
 	parammsg = new ParameterMessage(getGrainVelocityFactorSliderValue(), T("GRAIN_VELOCITY"));
 	mMainEditor->postMessage(parammsg);
 	parammsg = new ParameterMessage(getGrainStartRandomAmount(), T("GRAIN_START_RANDOM"));
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(1, T("REVERSE"),(int)mGranularSlices[mCurrentSliceIndex]->isReverse());
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(1, T("MONO"), (int)mGranularSlices[mCurrentSliceIndex]->isMono());
 	mMainEditor->postMessage(parammsg);
 }
 

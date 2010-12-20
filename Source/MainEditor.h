@@ -24,6 +24,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "WaveformView.h"
 class MainController;
 //[/Headers]
 
@@ -38,7 +39,6 @@ class MainController;
                                                                     //[/Comments]
 */
 class MainEditor  : public Component,
-                    public ComboBoxListener,
                     public SliderListener,
                     public ButtonListener
 {
@@ -53,6 +53,7 @@ public:
 
 	virtual void handleMessage(const Message &message);
 	void selectRadioPressed(int index);
+	void setupWaveformView(File& file);
     //[/UserMethods]
 
     void paint (Graphics& g);
@@ -125,11 +126,10 @@ private:
 	//friend class MainController;
 	friend class MainController;
 	MainController *mMessageListener;
-
+	WaveformView *mWaveformView;
     //[/UserVariables]
 
     //==============================================================================
-    ComboBox* mSliceChooserBox;
     Slider* mPanSlider;
     TextButton* mSaveFileButton;
     Slider* mGainSlider;
@@ -141,7 +141,7 @@ private:
     Slider* mGrainStartRandomSlider;
     Slider* mGrainAdvanceRandomSlider;
     Slider* mVelocityFactorRandomSlider;
-    ImageButton* mActiveButton;
+    ImageButton* mReverseButton;
     ImageButton* mMonoButton;
     ImageButton* mPlayButton;
     ImageButton* mOpenFileButton;

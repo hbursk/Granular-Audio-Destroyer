@@ -25,6 +25,7 @@
 		CAA0C00612B06E61009DE2E4 /* MainEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0C00412B06E61009DE2E4 /* MainEditor.cpp */; };
 		CAA0C16012B0C157009DE2E4 /* MainController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAA0C15F12B0C157009DE2E4 /* MainController.cpp */; };
 		CAAA422112B693A60063C8AB /* ParameterMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAAA422012B693A60063C8AB /* ParameterMessage.cpp */; };
+		CAF54B6912BF16A100996573 /* WaveformView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CAF54B6812BF16A100996573 /* WaveformView.cpp */; };
 		D180A200AC0A15B75E9C0862 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A625967612CDE6C42EF66702 /* OpenGL.framework */; };
 		DADE4501FDEA728923548866 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7B23EF196E1B9C6415C569 /* QTKit.framework */; };
 		FE081651FCBF2DB607514C50 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ABA738CA921707A610D4F9C /* Carbon.framework */; };
@@ -57,6 +58,8 @@
 		CAAA421F12B693A60063C8AB /* ParameterMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParameterMessage.h; path = ../../Source/ParameterMessage.h; sourceTree = SOURCE_ROOT; };
 		CAAA422012B693A60063C8AB /* ParameterMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParameterMessage.cpp; path = ../../Source/ParameterMessage.cpp; sourceTree = SOURCE_ROOT; };
 		CAC504A012A782BC00DC7BBB /* MainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainController.h; path = ../../Source/MainController.h; sourceTree = SOURCE_ROOT; };
+		CAF54B6712BF16A100996573 /* WaveformView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaveformView.h; path = ../../Source/WaveformView.h; sourceTree = SOURCE_ROOT; };
+		CAF54B6812BF16A100996573 /* WaveformView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WaveformView.cpp; path = ../../Source/WaveformView.cpp; sourceTree = SOURCE_ROOT; };
 		CB42FF027A87347C3128B2E6 /* JuceLibraryCode1.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = JuceLibraryCode1.mm; path = ../../JuceLibraryCode/JuceLibraryCode1.mm; sourceTree = SOURCE_ROOT; };
 		ECB9F35916340C9E1FE553DD /* DiscRecording.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiscRecording.framework; path = System/Library/Frameworks/DiscRecording.framework; sourceTree = SDKROOT; };
 		FB7086188552BD1BFA92A66C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -158,6 +161,8 @@
 				CAA0BE9412AF03D9009DE2E4 /* GranularSlice.cpp */,
 				CAAA421F12B693A60063C8AB /* ParameterMessage.h */,
 				CAAA422012B693A60063C8AB /* ParameterMessage.cpp */,
+				CAF54B6712BF16A100996573 /* WaveformView.h */,
+				CAF54B6812BF16A100996573 /* WaveformView.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -232,6 +237,7 @@
 				CAA0C00612B06E61009DE2E4 /* MainEditor.cpp in Sources */,
 				CAA0C16012B0C157009DE2E4 /* MainController.cpp in Sources */,
 				CAAA422112B693A60063C8AB /* ParameterMessage.cpp in Sources */,
+				CAF54B6912BF16A100996573 /* WaveformView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

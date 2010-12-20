@@ -22,6 +22,7 @@
 //[Headers] You can add your own extra header files here...
 #include "ParameterMessage.h"
 #include "MainController.h"
+
 //[/Headers]
 
 #include "MainEditor.h"
@@ -33,7 +34,7 @@
 //==============================================================================
 MainEditor::MainEditor (MainController* controller)
     : mMessageListener(controller),
-	  mSliceChooserBox (0),
+	  mWaveformView(0),
       mPanSlider (0),
       mSaveFileButton (0),
       mGainSlider (0),
@@ -45,7 +46,7 @@ MainEditor::MainEditor (MainController* controller)
       mGrainStartRandomSlider (0),
       mGrainAdvanceRandomSlider (0),
       mVelocityFactorRandomSlider (0),
-      mActiveButton (0),
+      mReverseButton (0),
       mMonoButton (0),
       mPlayButton (0),
       mOpenFileButton (0),
@@ -68,22 +69,8 @@ MainEditor::MainEditor (MainController* controller)
       mSelectButton8 (0),
       cachedImage_granularbackdropcropped_png (0)
 {
-	mSliceChooserBox = new ComboBox (T("SliceChooserBox"));
-    //addAndMakeVisible (mSliceChooserBox);
-    mSliceChooserBox->setEditableText (false);
-    mSliceChooserBox->setJustificationType (Justification::centredLeft);
-    mSliceChooserBox->setTextWhenNothingSelected (T("EDIT SLICE: 1"));
-    mSliceChooserBox->setTextWhenNoChoicesAvailable (T("(no choices)"));
-    mSliceChooserBox->addItem (T("EDIT SLICE: 1"), 1);
-    mSliceChooserBox->addItem (T("EDIT SLICE: 2"), 2);
-    mSliceChooserBox->addItem (T("EDIT SLICE: 3"), 3);
-    mSliceChooserBox->addItem (T("EDIT SLICE: 4"), 4);
-    mSliceChooserBox->addItem (T("EDIT SLICE: 5"), 5);
-    mSliceChooserBox->addItem (T("EDIT SLICE: 6"), 6);
-    mSliceChooserBox->addItem (T("EDIT SLICE: 7"), 7);
-    mSliceChooserBox->addItem (T("EDIT SLICE: 8"), 8);
-    mSliceChooserBox->addListener (this);
-
+	
+	
     addAndMakeVisible (mPanSlider = new Slider (T("PanSlider")));
     mPanSlider->setRange (0, 1, 0);
     mPanSlider->setSliderStyle (Slider::RotaryVerticalDrag);
@@ -193,18 +180,18 @@ MainEditor::MainEditor (MainController* controller)
     mVelocityFactorRandomSlider->setColour (Slider::rotarySliderOutlineColourId, Colour (0x5b998e7c));
     mVelocityFactorRandomSlider->addListener (this);
 
-    addAndMakeVisible (mActiveButton = new ImageButton (T("mActiveButton")));
-    mActiveButton->setButtonText (T("new button"));
-    mActiveButton->addButtonListener (this);
-
-    mActiveButton->setImages (false, true, true,
+    addAndMakeVisible (mReverseButton = new ImageButton (T("mActiveButton")));
+    mReverseButton->setButtonText (T("new button"));
+    mReverseButton->addButtonListener (this);
+	mReverseButton->setClickingTogglesState(true);
+    mReverseButton->setImages (false, true, true,
                               ImageCache::getFromMemory (offon_btn_idle_png, offon_btn_idle_pngSize), 1.0000f, Colour (0x0),
                               ImageCache::getFromMemory (offon_btn_idle_png, offon_btn_idle_pngSize), 1.0000f, Colour (0x0),
                               ImageCache::getFromMemory (offon_btn_press_png, offon_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mMonoButton = new ImageButton (T("mMonoButton")));
     mMonoButton->setButtonText (T("new button"));
     mMonoButton->addButtonListener (this);
-
+	mMonoButton->setClickingTogglesState(true);
     mMonoButton->setImages (false, true, true,
                             ImageCache::getFromMemory (offon_btn_idle_png, offon_btn_idle_pngSize), 1.0000f, Colour (0x0),
                             ImageCache::getFromMemory (offon_btn_idle_png, offon_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -236,7 +223,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton1 = new ImageButton (T("mActiveButton")));
     mActiveButton1->setButtonText (T("new button"));
     mActiveButton1->addButtonListener (this);
-
+	mActiveButton1->setToggleState(true, false);
+	mActiveButton1->setClickingTogglesState(true);
     mActiveButton1->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -244,7 +232,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton2 = new ImageButton (T("mActiveButton")));
     mActiveButton2->setButtonText (T("new button"));
     mActiveButton2->addButtonListener (this);
-
+	mActiveButton2->setToggleState(true, false);
+	mActiveButton2->setClickingTogglesState(true);
     mActiveButton2->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -252,7 +241,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton3 = new ImageButton (T("mActiveButton")));
     mActiveButton3->setButtonText (T("new button"));
     mActiveButton3->addButtonListener (this);
-
+	mActiveButton3->setToggleState(true, false);
+	mActiveButton3->setClickingTogglesState(true);
     mActiveButton3->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -260,7 +250,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton4 = new ImageButton (T("mActiveButton")));
     mActiveButton4->setButtonText (T("new button"));
     mActiveButton4->addButtonListener (this);
-
+	mActiveButton4->setToggleState(true, false);
+	mActiveButton4->setClickingTogglesState(true);
     mActiveButton4->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -268,7 +259,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton5 = new ImageButton (T("mActiveButton")));
     mActiveButton5->setButtonText (T("new button"));
     mActiveButton5->addButtonListener (this);
-
+	mActiveButton5->setToggleState(true, false);
+	mActiveButton5->setClickingTogglesState(true);
     mActiveButton5->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -276,7 +268,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton6 = new ImageButton (T("mActiveButton")));
     mActiveButton6->setButtonText (T("new button"));
     mActiveButton6->addButtonListener (this);
-
+	mActiveButton6->setToggleState(true, false);
+	mActiveButton6->setClickingTogglesState(true);
     mActiveButton6->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -284,7 +277,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton7 = new ImageButton (T("mActiveButton")));
     mActiveButton7->setButtonText (T("new button"));
     mActiveButton7->addButtonListener (this);
-
+	mActiveButton7->setToggleState(true, false);
+	mActiveButton7->setClickingTogglesState(true);
     mActiveButton7->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -292,7 +286,8 @@ MainEditor::MainEditor (MainController* controller)
     addAndMakeVisible (mActiveButton8 = new ImageButton (T("mActiveButton")));
     mActiveButton8->setButtonText (T("new button"));
     mActiveButton8->addButtonListener (this);
-
+	mActiveButton8->setToggleState(true, false);
+	mActiveButton8->setClickingTogglesState(true);
     mActiveButton8->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -368,6 +363,8 @@ MainEditor::MainEditor (MainController* controller)
     //[UserPreSize]
 	mGainSlider->setSkewFactorFromMidPoint(0.25);
 	mGrainLengthSlider->setSkewFactorFromMidPoint(0.25);
+	addAndMakeVisible (mWaveformView = new WaveformView());
+	mWaveformView->setMessageListener(mMessageListener);
     //[/UserPreSize]
 
     setSize (1024, 768);
@@ -381,7 +378,6 @@ MainEditor::~MainEditor()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    deleteAndZero (mSliceChooserBox);
     deleteAndZero (mPanSlider);
     deleteAndZero (mSaveFileButton);
     deleteAndZero (mGainSlider);
@@ -393,7 +389,7 @@ MainEditor::~MainEditor()
     deleteAndZero (mGrainStartRandomSlider);
     deleteAndZero (mGrainAdvanceRandomSlider);
     deleteAndZero (mVelocityFactorRandomSlider);
-    deleteAndZero (mActiveButton);
+    deleteAndZero (mReverseButton);
     deleteAndZero (mMonoButton);
     deleteAndZero (mPlayButton);
     deleteAndZero (mOpenFileButton);
@@ -439,7 +435,7 @@ void MainEditor::paint (Graphics& g)
 
 void MainEditor::resized()
 {
-    mSliceChooserBox->setBounds (848, 120, 150, 24);
+	
     mPanSlider->setBounds (180, 144, 80, 70);
     mSaveFileButton->setBounds (832, 568, 150, 24);
     mGainSlider->setBounds (56, 144, 80, 70);
@@ -451,7 +447,7 @@ void MainEditor::resized()
     mGrainStartRandomSlider->setBounds (180, 472, 80, 70);
     mGrainAdvanceRandomSlider->setBounds (308, 472, 80, 70);
     mVelocityFactorRandomSlider->setBounds (436, 472, 80, 70);
-    mActiveButton->setBounds (316, 160, 66, 43);
+    mReverseButton->setBounds (316, 160, 66, 43);
     mMonoButton->setBounds (440, 160, 66, 43);
     mPlayButton->setBounds (949, 42, 66, 43);
     mOpenFileButton->setBounds (703, 42, 66, 43);
@@ -473,27 +469,8 @@ void MainEditor::resized()
     mSelectButton7->setBounds (444, 65, 36, 33);
     mSelectButton8->setBounds (484, 65, 36, 33);
     //[UserResized] Add your own custom resize handling here..
+	mWaveformView->setBounds (40, 610, 945, 139);
     //[/UserResized]
-}
-
-void MainEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
-{
-    //[UsercomboBoxChanged_Pre]
-    //[/UsercomboBoxChanged_Pre]
-
-    if (comboBoxThatHasChanged == mSliceChooserBox)
-    {
-        //[UserComboBoxCode_mSliceChooserBox] -- add your combo box handling code here..
-		int idvalue = comboBoxThatHasChanged->getSelectedId();
-		if (idvalue != 0)
-			idvalue--;
-		ParameterMessage *msg = new ParameterMessage(0, T("SLICE_INDEX_CHANGED"), idvalue);
-		mMessageListener->postMessage(msg);
-        //[/UserComboBoxCode_mSliceChooserBox]
-    }
-
-    //[UsercomboBoxChanged_Post]
-    //[/UsercomboBoxChanged_Post]
 }
 
 void MainEditor::sliderValueChanged (Slider* sliderThatWasMoved)
@@ -582,14 +559,18 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mSaveFileButton]
     }
-    else if (buttonThatWasClicked == mActiveButton)
+    else if (buttonThatWasClicked == mReverseButton)
     {
         //[UserButtonCode_mActiveButton] -- add your button handler code here..
+		ParameterMessage *msg = new ParameterMessage(0, T("REVERSE_PRESSED"), 1);
+		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton]
     }
     else if (buttonThatWasClicked == mMonoButton)
     {
         //[UserButtonCode_mMonoButton] -- add your button handler code here..
+		ParameterMessage *msg = new ParameterMessage(0, T("MONO_PRESSED"), 1);
+		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mMonoButton]
     }
     else if (buttonThatWasClicked == mPlayButton)
@@ -622,63 +603,63 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mActiveButton1)
     {
         //[UserButtonCode_mActiveButton1] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE1_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 0);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton1]
     }
     else if (buttonThatWasClicked == mActiveButton2)
     {
         //[UserButtonCode_mActiveButton2] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE2_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 1);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton2]
     }
     else if (buttonThatWasClicked == mActiveButton3)
     {
         //[UserButtonCode_mActiveButton3] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE3_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 2);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton3]
     }
     else if (buttonThatWasClicked == mActiveButton4)
     {
         //[UserButtonCode_mActiveButton4] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE4_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 3);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton4]
     }
     else if (buttonThatWasClicked == mActiveButton5)
     {
         //[UserButtonCode_mActiveButton5] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE5_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 4);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton5]
     }
     else if (buttonThatWasClicked == mActiveButton6)
     {
         //[UserButtonCode_mActiveButton6] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE6_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 5);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton6]
     }
     else if (buttonThatWasClicked == mActiveButton7)
     {
         //[UserButtonCode_mActiveButton7] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE7_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 6);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton7]
     }
     else if (buttonThatWasClicked == mActiveButton8)
     {
         //[UserButtonCode_mActiveButton8] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE8_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("ACTIVE_PRESSED"), 7);
 		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mActiveButton8]
     }
     else if (buttonThatWasClicked == mSelectButton1)
     {
         //[UserButtonCode_mSelectButton1] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT1_PRESSED"), 0);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 0);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(1);
         //[/UserButtonCode_mSelectButton1]
@@ -686,7 +667,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSelectButton2)
     {
         //[UserButtonCode_mSelectButton2] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT2_PRESSED"), 1);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 1);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(2);
         //[/UserButtonCode_mSelectButton2]
@@ -694,7 +675,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSelectButton3)
     {
         //[UserButtonCode_mSelectButton3] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT3_PRESSED"), 2);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 2);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(3);
         //[/UserButtonCode_mSelectButton3]
@@ -702,7 +683,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSelectButton4)
     {
         //[UserButtonCode_mSelectButton4] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT4_PRESSED"), 3);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 3);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(4);
         //[/UserButtonCode_mSelectButton4]
@@ -710,7 +691,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSelectButton5)
     {
         //[UserButtonCode_mSelectButton5] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT5_PRESSED"), 4);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 4);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(5);
         //[/UserButtonCode_mSelectButton5]
@@ -718,7 +699,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSelectButton6)
     {
         //[UserButtonCode_mSelectButton6] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT6_PRESSED"), 5);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 5);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(6);
         //[/UserButtonCode_mSelectButton6]
@@ -726,7 +707,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSelectButton7)
     {
         //[UserButtonCode_mSelectButton7] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT7_PRESSED"), 6);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 6);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(7);
         //[/UserButtonCode_mSelectButton7]
@@ -734,7 +715,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mSelectButton8)
     {
         //[UserButtonCode_mSelectButton8] -- add your button handler code here..
-		ParameterMessage *msg = new ParameterMessage(1, T("SELECT8_PRESSED"), 7);
+		ParameterMessage *msg = new ParameterMessage(1, T("SELECT_PRESSED"), 7);
 		mMessageListener->postMessage(msg);
 		selectRadioPressed(8);
         //[/UserButtonCode_mSelectButton8]
@@ -788,40 +769,54 @@ void MainEditor::selectRadioPressed(int index)
 	}
 }
 
+void MainEditor::setupWaveformView(File& file)
+{
+	mWaveformView->setFile((const File&) file);
+}
+
 void MainEditor::handleMessage(const Message &message)
 {
-       const ParameterMessage &msg = (const ParameterMessage&)message;
-       //handle message here and do the right stuff
-       String command = msg.mStringCommand;
-       float floatParameter = msg.mFloatParameter;
-       if (command.compare(T("GRAIN_GAIN"))==0)
-       {
-               mGainSlider->setValue(floatParameter, false, false);
-       }
-       else if (command.compare(T("GRAIN_PAN"))==0)
-       {
-               mPanSlider->setValue(floatParameter, false, false);
-       }
-       else if (command.compare(T("GRAIN_LENGTH"))==0)
-       {
-               mGrainLengthSlider->setValue(floatParameter, false, false);
-       }
-       else if (command.compare(T("GRAIN_START"))==0)
-       {
-               mGrainStartSlider->setValue(floatParameter, false, false);
-       }
-       else if (command.compare(T("GRAIN_ADVANCE"))==0)
-       {
-               mGrainAdvanceSlider->setValue(floatParameter, false, false);
-       }
-       else if (command.compare(T("GRAIN_VELOCITY"))==0)
-       {
-               mGrainVelocitySlider->setValue(floatParameter, false, false);
-       }
-	   else if (command.compare(T("GRAIN_START_RANDOM"))==0)
-       {
-               mGrainStartRandomSlider->setValue(floatParameter, false, false);
-       }
+	const ParameterMessage &msg = (const ParameterMessage&)message;
+	//handle message here and do the right stuff
+	String command = msg.mStringCommand;
+	float floatParameter = msg.mFloatParameter;
+	int intParameter = msg.mIntParameter;
+	if (command.compare(T("GRAIN_GAIN"))==0)
+	{
+		mGainSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_PAN"))==0)
+	{
+		mPanSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_LENGTH"))==0)
+	{
+		mGrainLengthSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_START"))==0)
+	{
+		mGrainStartSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_ADVANCE"))==0)
+	{
+		mGrainAdvanceSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_VELOCITY"))==0)
+	{
+		mGrainVelocitySlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("GRAIN_START_RANDOM"))==0)
+	{
+		mGrainStartRandomSlider->setValue(floatParameter, false, false);
+	}
+	else if (command.compare(T("REVERSE"))==0)
+	{
+		mReverseButton->setToggleState((bool)intParameter, false);
+	}
+	else if (command.compare(T("MONO"))==0)
+	{
+		mMonoButton->setToggleState((bool)intParameter, false);
+	}
 }
 
 
@@ -902,7 +897,7 @@ BEGIN_JUCER_METADATA
           thumbcol="80ffffff" rotarysliderfill="cfbfb6a7" rotaryslideroutline="5be9d9be"
           min="0" max="1" int="0" style="RotaryVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="0" textBoxWidth="60" textBoxHeight="20" skewFactor="1"/>
-  <IMAGEBUTTON name="mActiveButton" id="4a57d0084c8a0ff3" memberName="mActiveButton"
+  <IMAGEBUTTON name="mReverseButton" id="4a57d0084c8a0ff3" memberName="mReverseButton"
                virtualName="" explicitFocusOrder="0" pos="316 160 66 43" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="offon_btn_idle_png" opacityNormal="1" colourNormal="0"

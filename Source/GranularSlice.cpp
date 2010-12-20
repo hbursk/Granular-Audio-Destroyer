@@ -147,6 +147,16 @@ void GranularSlice::setBypass(bool bypass)
 	mBypass = bypass;
 }
 
+void GranularSlice::setReverse(bool reverse)
+{
+	mReversed = reverse;
+}
+
+void GranularSlice::setMono(bool mono)
+{
+	mRenderMono = mono;
+}
+
 float GranularSlice::getGain()
 {
 	return mGain;
@@ -197,6 +207,16 @@ void GranularSlice::resetAudioPlayback()
 	mGrainRandomPositionAbsolute[0] = 0;
 	mGrainRandomPositionAbsolute[1] = 0;
 	mSampleCounter = 0;
+}
+
+bool GranularSlice::isReverse()
+{
+	return mReversed;
+}
+
+bool GranularSlice::isMono()
+{
+	return mRenderMono;
 }
 
 int64 GranularSlice::getDataLength()
