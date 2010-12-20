@@ -42,7 +42,8 @@ public:
 	
 	int64 getDataLength();
 	void resetAudioPlayback();
-	
+	int64 getDataLengthPerChannel();
+
 	bool renderAudioBlock(float** outputData, int numChannels, int numSamples);
 
 private:
@@ -74,4 +75,5 @@ private:
 	float* mData[2];
 	int64  mDataLength;
 	int	   mNumChannels;
+	int64  mDataLengthPerChannel;
 };
