@@ -65,6 +65,8 @@ void GranularSlice::resetDefaults()
 	mRenderMono = false;
 	mBypass = false;
 	mReversed = false;
+	mGrainAdvancePosition[0] = 0;
+	mGrainAdvancePosition[1] = 0;
 }
 
 void GranularSlice::setData(float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels, bool reset)
@@ -235,6 +237,7 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 	//do nothing if bypassed
 	if (mBypass)// || mGain == 0) //shoud still render if Gain is 0 since positions need to be advanced
 		return false;
+
 	// The outputData pointer could have existing audio in it.  Mix into that. 
 	// Store this locally so that they won't change during an audio buffer render - psuedo variable lock 
 	int grainPositionAbsolute = 0;
@@ -246,10 +249,11 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 		float *output = outputData[i];
 		int samplesToRead = numSamples;
 
-		grainPositionAbsolute = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i];
-		
+		grainPositionAbsolute = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i] + mGrainAdvancePosition[i];
+
 		for (int j=0; j<samplesToRead; ++j)
 		{
+			float sample = 0;
 			int samppos = grainPositionAbsolute + mGrainCurrentPositionRelative[i];
 
 			if (samppos >= mDataLengthPerChannel)
@@ -257,27 +261,9 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 			else if (samppos < 0)
 				samppos = mDataLengthPerChannel + samppos;
 
-			output[j] += mData[i][samppos] * mGain * mPanGain[i];
+			sample = mData[i][samppos] * mGain * mPanGain[i];
+			output[j] += sample;
 
-			/* This doesn't work with the reverse logic, will fix up ramping later
-			//ramp in and out on grain boundaries	
-			if (mGrainCurrentPositionRelative[i] <= kSampleRamp)
-				output[j] = output[j] * ((float)(1.0f*mGrainCurrentPositionRelative[i]/(1.0f*kSampleRamp)));
-			else if ((grainLength - mGrainCurrentPositionRelative[i]) <= kSampleRamp)
-				output[j] = output[j] * ((float)(1.0f*(grainLength - mGrainCurrentPositionRelative[i]))/(1.0f*kSampleRamp));
-*/
-
-			/*
-			//ramp in and out on audio buffer boundaries --maybe not needed? TBD
-			if (j <= kQuickRamp)
-			{
-				output[j] = output[j] * ((float)(1.0f*j/(1.0f*kQuickRamp)));
-			}
-			else if (samplesToRead - j <= kQuickRamp)
-			{
-				output[j] = output[j] * ((float)(1.0f*(samplesToRead - j))/(1.0f*kQuickRamp));
-			}
-			*/
 			if (mReversed)
 				mGrainCurrentPositionRelative[i]--;
 			else
@@ -287,29 +273,15 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 			if (abs(mGrainCurrentPositionRelative[i]) >= grainLength) {
 				mGrainCurrentPositionRelative[i] = 0;
 				mGrainRandomPositionAbsolute[i] = (RAND_WEIGHT(kGrainRandPosition) * mRandomReadPosition);
+				mGrainAdvancePosition[i] += mGrainAdvanceAmount;
+				mGrainAdvancePosition[i] %= mDataLengthPerChannel;
 
-				grainPositionAbsolute = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i];
+				grainPositionAbsolute = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i] + mGrainAdvancePosition[i];
 
 				// bound upper and lower limit on randomness affecting grain start sample position
 				// modulo that ish.
 				grainPositionAbsolute %= mDataLengthPerChannel;
-				//hayden -also modulo that member ish
-				
 			}
-		}
-	}
-
-
-	mSampleCounter += numSamples;
-	if (mSampleCounter >= (int64)(mGrainLength * mVelocityFactor) && (mVelocityFactor != 0))
-	{
-		mGrainStartPositionAbsolute += mGrainAdvanceAmount;
-		mGrainStartPositionAbsolute = mGrainStartPositionAbsolute % (mDataLengthPerChannel);
-		mSampleCounter = 0;
-		if (mGrainAdvanceAmount != 0)
-		{
-			mGrainCurrentPositionRelative[0] = 0;
-			mGrainCurrentPositionRelative[1] = 0;
 		}
 	}
 

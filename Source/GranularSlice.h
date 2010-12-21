@@ -80,4 +80,5 @@ private:
 	int64  mDataLength;
 	int	   mNumChannels;
 	int64  mDataLengthPerChannel;
+	int64  mGrainAdvancePosition[2];
 };
