@@ -215,6 +215,8 @@ void GranularSlice::resetAudioPlayback()
 	mGrainRandomPositionAbsolute[0] = 0;
 	mGrainRandomPositionAbsolute[1] = 0;
 	mSampleCounter = 0;
+	mGrainAdvancePosition[0] = 0;
+	mGrainAdvancePosition[1] = 0;
 }
 
 bool GranularSlice::isReverse()
