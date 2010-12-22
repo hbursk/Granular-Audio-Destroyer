@@ -105,6 +105,9 @@ void GranularSlice::setGrainStartPosition (int64 start)
 {
 	mGrainStartPositionControlValue = start;
 	mGrainStartPositionAbsolute = start;
+	//hayden - reset these values on grain start change
+	mGrainAdvancePosition[0] = 0;
+	mGrainAdvancePosition[1] = 0;
 }
 
 void GranularSlice::setGrainCurrentPosition (int64 pos)

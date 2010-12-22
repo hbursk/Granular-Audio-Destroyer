@@ -241,7 +241,10 @@ void  MainController::setGrainLength(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
-	float length = nvalue*(kMaxGrainLength - kMinGrainLength) + kMinGrainLength;
+	int64 maxlength = kMaxGrainLength;
+	if (maxlength >= (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f))
+		maxlength = (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f) - 1;
+	float length = nvalue*(maxlength - kMinGrainLength) + kMinGrainLength;
 	mGranularSlices[mCurrentSliceIndex]->setGrainLength(length);
 }
 
@@ -256,8 +259,11 @@ float MainController::getGrainLengthSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
+	int64 maxlength = kMaxGrainLength;
+	if (maxlength >= (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f))
+		maxlength = (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f) - 1;
 	float length = getGrainLength();
-	float slidervalue = (length - kMinGrainLength)/(kMaxGrainLength - kMinGrainLength);
+	float slidervalue = (length - kMinGrainLength)/(maxlength - kMinGrainLength);
 	return slidervalue;
 }
 
@@ -265,6 +271,8 @@ void  MainController::setGrainStartPosition(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
+	if (nvalue == 1.0f)
+		nvalue = 0.999f;
 	int64 startpos = (int64)(nvalue*(1.0f*mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f));
 	mGranularSlices[mCurrentSliceIndex]->setGrainStartPosition(startpos);
 }
@@ -289,7 +297,10 @@ void  MainController::setGrainAdvanceAmount(float nvalue)
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return;
-	int64 advanceamount = (int64)(nvalue*(kMaxAdvance - kMinAdvance) + kMinAdvance);
+	int64 maxadvance = kMaxAdvance;
+	if (maxadvance >= (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f))
+		maxadvance = (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f) - 1;
+	int64 advanceamount = (int64)(nvalue*(maxadvance - kMinAdvance) + kMinAdvance);
 	mGranularSlices[mCurrentSliceIndex]->setGrainAdvanceAmount(advanceamount);
 }
 
@@ -304,8 +315,11 @@ float MainController::getGrainAdvanceAmountSliderValue()
 {
 	if (mGranularSlices[mCurrentSliceIndex] == 0)
 		return 0.0f;
+	int64 maxadvance = kMaxAdvance;
+	if (maxadvance >= (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f))
+		maxadvance = (int64)(mGranularSlices[mCurrentSliceIndex]->getDataLength()/2.0f) - 1;
 	float advanceamount = (float)getGrainAdvanceAmount();
-	float slidervalue = (1.0f*(advanceamount - kMinAdvance))/(1.0f*(kMaxAdvance - kMinAdvance));
+	float slidervalue = (1.0f*(advanceamount - kMinAdvance))/(1.0f*(maxadvance - kMinAdvance));
 	return slidervalue;
 }
 

@@ -580,6 +580,8 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mReverseButton)
     {
         //[UserButtonCode_mReverseButton] -- add your button handler code here..
+		ParameterMessage *msg = new ParameterMessage(0, T("REVERSE_PRESSED"), 1);
+		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mReverseButton]
     }
     else if (buttonThatWasClicked == mMonoButton)
@@ -614,6 +616,8 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mRecordButton)
     {
         //[UserButtonCode_mRecordButton] -- add your button handler code here..
+		ParameterMessage *msg = new ParameterMessage(0, T("RECORD_PRESSED"), 1);
+		mMessageListener->postMessage(msg);
         //[/UserButtonCode_mRecordButton]
     }
     else if (buttonThatWasClicked == mActiveButton1)
