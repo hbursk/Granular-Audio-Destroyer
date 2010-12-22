@@ -257,11 +257,7 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 		{
 			float sample = 0;
 			int samppos = grainPositionAbsolute + mGrainCurrentPositionRelative[i];
-
-			if (samppos >= mDataLengthPerChannel)
-				samppos = samppos - mDataLengthPerChannel;
-			else if (samppos < 0)
-				samppos = mDataLengthPerChannel + samppos;
+			samppos %= mDataLengthPerChannel;
 
 			sample = mData[i][samppos] * mGain * mPanGain[i];
 			output[j] += sample;
