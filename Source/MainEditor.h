@@ -3,7 +3,7 @@
 
   This is an automatically generated file created by the Jucer!
 
-  Creation date:  19 Dec 2010 2:37:44am
+  Creation date:  22 Dec 2010 3:14:29am
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
@@ -19,8 +19,8 @@
   ==============================================================================
 */
 
-#ifndef __JUCER_HEADER_MAINEDITOR_MAINEDITOR_CFA4DFB9__
-#define __JUCER_HEADER_MAINEDITOR_MAINEDITOR_CFA4DFB9__
+#ifndef __JUCER_HEADER_MAINEDITOR_MAINEDITOR_78631152__
+#define __JUCER_HEADER_MAINEDITOR_MAINEDITOR_78631152__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
@@ -43,8 +43,9 @@ class MainEditor  : public Component,
                     public ButtonListener
 {
 public:
+    //=============================================================================
+
     //==============================================================================
-      //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     MainEditor (MainController *controller);
     ~MainEditor();
@@ -58,7 +59,6 @@ public:
 
     void paint (Graphics& g);
     void resized();
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void buttonClicked (Button* buttonThatWasClicked);
 
@@ -117,6 +117,10 @@ public:
     static const int offon_mini_idle_pngSize;
     static const char* offon_mini_press_png;
     static const int offon_mini_press_pngSize;
+    static const char* screentoggle_btn_press_png;
+    static const int screentoggle_btn_press_pngSize;
+    static const char* screentoggle_btn_idle_png;
+    static const int screentoggle_btn_idle_pngSize;
 
     //==============================================================================
     juce_UseDebuggingNewOperator
@@ -171,4 +175,4 @@ private:
 };
 
 
-#endif   // __JUCER_HEADER_MAINEDITOR_MAINEDITOR_CFA4DFB9__
+#endif   // __JUCER_HEADER_MAINEDITOR_MAINEDITOR_78631152__
