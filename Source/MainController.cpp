@@ -382,11 +382,11 @@ void MainController::memStoreAudioFile(File &audioFile)
 		}
 		int num = reader->numChannels;
 		int* destBufs[num];
-		mLeftBuffer = (float*)malloc((reader->lengthInSamples/reader->numChannels*sizeof(float))+88200*sizeof(float)); //add some extra zeros at the end for safety
+		mLeftBuffer = (float*)malloc((reader->lengthInSamples/reader->numChannels*sizeof(float))); //add some extra zeros at the end for safety
 		destBufs[0] = (int*)mLeftBuffer;
 		if (reader->numChannels > 1)
 		{
-			mRightBuffer = (float*)malloc((reader->lengthInSamples/reader->numChannels*sizeof(float))+88200*sizeof(float)); //add some extra zeros at the end for safety
+			mRightBuffer = (float*)malloc((reader->lengthInSamples/reader->numChannels*sizeof(float))); //add some extra zeros at the end for safety
 			destBufs[1] = (int*)mRightBuffer;
 		}
 		reader->read(destBufs, reader->numChannels, 0, reader->lengthInSamples/reader->numChannels, false);
