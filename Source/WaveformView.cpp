@@ -51,7 +51,7 @@ void WaveformView::paint (Graphics& g)
 {
 	g.fillAll (Colour(0x00000000));
 
-	g.setColour (Colour (0x565e5c57));
+	g.setColour (Colour (0x50374750));
 
 	if (mThumbnail.getTotalLength() > 0)
 	{
