@@ -33,7 +33,7 @@ const float kMaxGain = 4.0f;
 const int64 kMinGrainLength = 220;
 const int64 kMaxGrainLength = 44100*2;
 const int64 kMinAdvance = 0;
-const int64 kMaxAdvance = 44100*2;
+const int64 kMaxAdvance = kMaxGrainLength*2;
 const float kMinVelocity = 0.0f;
 const float kMaxVelocity = 3.0f;
 
