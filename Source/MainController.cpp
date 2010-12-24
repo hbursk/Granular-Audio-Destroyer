@@ -25,6 +25,9 @@
 #include "MainController.h"
 #include "ParameterMessage.h"
 
+#define APP_DIRECTORY T("\\Haek Bayden\\Granular\\")
+#define RECORDING_DIRECTORY T("\\Haek Bayden\\Granular\\Recording\\")
+#define RECORDING_FILE_PREFIX T("\\granular-")
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
@@ -45,7 +48,9 @@ MainController::MainController ()
 	  mCurrentAudioFileSource(0),
 	  mInterleavedBuffer(0),
 	  mLeftBuffer(0),
-	  mRightBuffer(0)
+	  mRightBuffer(0),
+	  mAudioRecorder(0),
+	  mPlaying(false)
 {
 
     //[UserPreSize]	
@@ -63,6 +68,24 @@ MainController::MainController ()
 		mGranularSlices[i] = 0;
 	}
 	setupGranularSlices(true);
+	
+	//create directory for saving files to
+	File docdir = File::getSpecialLocation(File::userDocumentsDirectory);
+	File workingdir(docdir.getFullPathName() + RECORDING_DIRECTORY);
+	bool result = true;
+	if (!workingdir.exists())
+	{
+		result = workingdir.createDirectory();
+	}
+	if (!result)
+	{
+		printf("Failed to create recording directory!");
+		//fail loudly!
+		assert(0);
+	}
+	mRecordingDirectory = workingdir.getFullPathName();
+	mAppDirectory = docdir.getFullPathName() + APP_DIRECTORY;
+	mAudioRecorder = new AudioRecorder();
     //[/Constructor]
 }
 
@@ -100,6 +123,7 @@ MainController::~MainController()
 			mGranularSlices[i] = 0;
 		}
 	}
+	deleteAndZero(mAudioRecorder);
     //[/Destructor]
 }
 
@@ -108,26 +132,65 @@ MainController::~MainController()
 void MainController::playPressed()
 {
 	if (mLeftBuffer == 0)
+	{
+		mPlaying = false;
+		updateTransportUI();
 		return;
+	}
 	if (mPlaying)
 	{
+		if (mAudioRecorder->isRecording())
+			mAudioRecorder->stop();
 		mDeviceManager.removeAudioCallback(this);
-		mPlaying = false;
 		resetAudioRenderer();
 	}
 	else
 	{
 		resetAudioRenderer();
 		mDeviceManager.addAudioCallback(this);
-		mPlaying = true;
 	}
+}
+
+void MainController::recordPressed()
+{
+	if (mLeftBuffer == 0)
+	{
+		updateTransportUI();
+		return;
+	}
+	if (mAudioRecorder->isRecording())
+	{
+		mAudioRecorder->stop();
+		updateTransportUI();
+	}
+	else
+	{
+		if (!mPlaying)
+		{
+			mAudioRecorder->startRecording(createAvailableRecordingFilePath());
+			playPressed();
+		}
+		else
+		{
+			mAudioRecorder->startRecording(createAvailableRecordingFilePath());
+			updateTransportUI();
+		}
+	}
+}
+
+File MainController::createAvailableRecordingFilePath()
+{
+	//should create a file name that is unique and available.
+	// for now, overwrite a single file for testing
+	String time = Time::getCurrentTime().toString(true, true);
+	File recfile(mRecordingDirectory + RECORDING_FILE_PREFIX + time + T(".wav"));
+	return recfile;
 }
 
 void MainController::openFilePressed()
 {
 	if (mPlaying)
 	{
-		mPlaying = false;
 		mDeviceManager.removeAudioCallback(this);
 	}
 	WildcardFileFilter wildcardFilter ("*.wav","", "Wave files");
@@ -155,7 +218,6 @@ void MainController::saveFilePressed()
 {
 	if (mPlaying)
 	{
-		mPlaying = false;
 		mDeviceManager.removeAudioCallback(this);
 	}
 	if (mLeftBuffer == 0)
@@ -523,6 +585,7 @@ void MainController::audioDeviceAboutToStart (AudioIODevice* device)
 {
     zeromem (samples, sizeof (samples));
 	mPlaying = true;
+	updateTransportUI();
 	//mPlayButton->setButtonText(T("Stop"));
 }
 
@@ -530,6 +593,7 @@ void MainController::audioDeviceStopped()
 {
     zeromem (samples, sizeof (samples));
 	mPlaying = false;
+	updateTransportUI();
 	//mPlayButton->setButtonText(T("Play"));
 }
 
@@ -619,6 +683,14 @@ void MainController::handleMessage(const Message &message)
 	{	
 		mGranularSlices[mCurrentSliceIndex]->setMono(!mGranularSlices[mCurrentSliceIndex]->isMono());
 	}
+	else if (command.compare(T("RECORD_PRESSED"))==0)
+	{
+		recordPressed();
+	}
+	else if (command.compare(T("PLAY_PRESSED"))==0)
+	{
+		playPressed();
+	}
 }
 
 void MainController::updateGUIParameters()
@@ -640,6 +712,14 @@ void MainController::updateGUIParameters()
 	parammsg = new ParameterMessage(1, T("REVERSE"),(int)mGranularSlices[mCurrentSliceIndex]->isReverse());
 	mMainEditor->postMessage(parammsg);
 	parammsg = new ParameterMessage(1, T("MONO"), (int)mGranularSlices[mCurrentSliceIndex]->isMono());
+	mMainEditor->postMessage(parammsg);
+}
+
+void MainController::updateTransportUI()
+{
+	ParameterMessage *parammsg = new ParameterMessage(1, T("RECORD"), (int)mAudioRecorder->isRecording());
+	mMainEditor->postMessage(parammsg);
+	parammsg = new ParameterMessage(1, T("PLAY"), (int)mPlaying);
 	mMainEditor->postMessage(parammsg);
 }
 
@@ -671,6 +751,12 @@ bool MainController::renderAudioToBuffer(float** outputChannelData, int numOutpu
 			else if (output[j] < -1.0f)
 				output[j] = -1.0f;
 		}
+	}
+	
+	// record to file here if recording
+	if (mAudioRecorder->isRecording())
+	{
+		mAudioRecorder->addSamplesToBuffer(outputChannelData, numOutputChannels, numSamples); 
 	}
 	return outofbounds;
 }

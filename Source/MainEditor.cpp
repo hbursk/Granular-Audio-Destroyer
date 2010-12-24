@@ -379,6 +379,8 @@ MainEditor::MainEditor (MainController *controller)
 	
 	mReverseButton->setClickingTogglesState(true);
 	mMonoButton->setClickingTogglesState(true);
+	mPlayButton->setClickingTogglesState(true);
+	mRecordButton->setClickingTogglesState(true);
 	mGainSlider->setSkewFactorFromMidPoint(0.25);
 	mGrainLengthSlider->setSkewFactorFromMidPoint(0.25);
 	addAndMakeVisible (mWaveformView = new WaveformView());
@@ -594,8 +596,11 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == mPlayButton)
     {
         //[UserButtonCode_mPlayButton] -- add your button handler code here..
-		MainController *mc = (MainController*)mMessageListener;
-		mc->playPressed();
+		ParameterMessage *msg = new ParameterMessage(0, T("PLAY_PRESSED"), 1);
+		mMessageListener->postMessage(msg);
+		//MainController *mc = (MainController*)mMessageListener;
+		//mc->playPressed();
+		/*
 		if (mc->isPlaying())
 		{
 			mPlayButton->setToggleState(true, false);
@@ -604,6 +609,7 @@ void MainEditor::buttonClicked (Button* buttonThatWasClicked)
 		{
 			mPlayButton->setToggleState(false, false);
 		}
+		*/
         //[/UserButtonCode_mPlayButton]
     }
     else if (buttonThatWasClicked == mOpenFileButton)
@@ -836,6 +842,14 @@ void MainEditor::handleMessage(const Message &message)
 	else if (command.compare(T("MONO"))==0)
 	{
 		mMonoButton->setToggleState((bool)intParameter, false);
+	}
+	else if (command.compare(T("PLAY"))==0)
+	{
+		mPlayButton->setToggleState((bool)intParameter, false);
+	}
+	else if (command.compare(T("RECORD"))==0)
+	{
+		mRecordButton->setToggleState((bool)intParameter, false);
 	}
 }
 

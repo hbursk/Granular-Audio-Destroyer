@@ -26,6 +26,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "GranularSlice.h"
 #include "MainEditor.h"
+#include "AudioRecorder.h"
 //[/Headers]
 
 #define NUM_GRAINS 8
@@ -52,6 +53,8 @@ public:
 	
 	
 	void playPressed();
+	void recordPressed();
+	File createAvailableRecordingFilePath();
 	void openFilePressed();
 	void saveFilePressed();
 	bool isPlaying();
@@ -87,6 +90,7 @@ public:
 	bool renderAudioToBuffer(float** outputChannelData, int numOutputChannels, int numSamples);
 	
 	void updateGUIParameters();
+	void updateTransportUI();
 	
 	//MessageListener
 	virtual void handleMessage(const Message &message);
@@ -117,6 +121,8 @@ private:
     AudioTransportSource mTransportSource;
     AudioFormatReaderSource* mCurrentAudioFileSource;
 	
+	AudioRecorder* mAudioRecorder;
+	
 	File mCurrentFile;
 
 	float samples [1024];
@@ -140,7 +146,8 @@ private:
 	int   mCurrentSliceIndex;
 	
 	MainEditor *mMainEditor;
-	
+	String mRecordingDirectory;
+	String mAppDirectory;
     //[/UserVariables]
 
     //==============================================================================
