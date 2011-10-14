@@ -250,6 +250,11 @@ int64 GranularSlice::getDataLength()
 	return mDataLength;
 }
 
+#define MODULO(x,y) \
+	x = (x) % (y);	\
+	if (x < 0)		\
+		x = (y) + (x);
+
 bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int numSamples)
 {
 	//do nothing if bypassed
@@ -273,7 +278,7 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 		{
 			float sample = 0;
 			int samppos = grainPositionAbsolute + mGrainCurrentPositionRelative[i];
-			samppos %= mDataLengthPerChannel;
+			MODULO(samppos, mDataLengthPerChannel);
 
 			sample = mData[i][samppos] * mGain * mPanGain[i];
 
@@ -301,13 +306,13 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 				else
 					mGrainAdvancePosition[i] += mGrainAdvanceAmount;
 
-				mGrainAdvancePosition[i] %= mDataLengthPerChannel;
+				MODULO(mGrainAdvancePosition[i], mDataLengthPerChannel);
 
 				grainPositionAbsolute = mGrainStartPositionAbsolute + mGrainRandomPositionAbsolute[i] + mGrainAdvancePosition[i];
 
 				// bound upper and lower limit on randomness affecting grain start sample position
 				// modulo that ish.
-				grainPositionAbsolute %= mDataLengthPerChannel;
+				MODULO(grainPositionAbsolute, mDataLengthPerChannel);
 			}
 		}
 	}
