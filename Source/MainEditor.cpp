@@ -82,7 +82,7 @@ MainEditor::MainEditor (MainController *controller)
 	mSaveFileButton = new TextButton (T("SaveFileButton"));
     //addAndMakeVisible (mSaveFileButton);
     mSaveFileButton->setButtonText (T("SAVE FILE"));
-    mSaveFileButton->addButtonListener (this);
+    mSaveFileButton->addListener (this);
     mSaveFileButton->setColour (TextButton::buttonColourId, Colour (0xff54170c));
     mSaveFileButton->setColour (TextButton::buttonOnColourId, Colour (0xffad4d41));
     mSaveFileButton->setColour (TextButton::textColourOnId, Colours::white);
@@ -189,7 +189,7 @@ MainEditor::MainEditor (MainController *controller)
 
     addAndMakeVisible (mReverseButton = new ImageButton (T("mReverseButton")));
     mReverseButton->setButtonText (T("new button"));
-    mReverseButton->addButtonListener (this);
+    mReverseButton->addListener (this);
 
     mReverseButton->setImages (false, true, true,
                                ImageCache::getFromMemory (screentoggle_btn_idle_png, screentoggle_btn_idle_pngSize), 0.70f, Colour (0x0),
@@ -197,7 +197,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (screentoggle_btn_press_png, screentoggle_btn_press_pngSize), 0.8f, Colour (0x0));
     addAndMakeVisible (mMonoButton = new ImageButton (T("mMonoButton")));
     mMonoButton->setButtonText (T("new button"));
-    mMonoButton->addButtonListener (this);
+    mMonoButton->addListener (this);
 
     mMonoButton->setImages (false, true, true,
                             ImageCache::getFromMemory (screentoggle_btn_idle_png, screentoggle_btn_idle_pngSize), 0.7000f, Colour (0x0),
@@ -205,7 +205,7 @@ MainEditor::MainEditor (MainController *controller)
                             ImageCache::getFromMemory (screentoggle_btn_press_png, screentoggle_btn_press_pngSize), 0.8000f, Colour (0x0));
     addAndMakeVisible (mPlayButton = new ImageButton (T("PlayButton")));
     mPlayButton->setButtonText (T("new button"));
-    mPlayButton->addButtonListener (this);
+    mPlayButton->addListener (this);
 
     mPlayButton->setImages (false, true, true,
                             ImageCache::getFromMemory (play_btn_idle_png, play_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -213,7 +213,7 @@ MainEditor::MainEditor (MainController *controller)
                             ImageCache::getFromMemory (play_btn_press_png, play_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mOpenFileButton = new ImageButton (T("OpenFileButton")));
     mOpenFileButton->setButtonText (T("new button"));
-    mOpenFileButton->addButtonListener (this);
+    mOpenFileButton->addListener (this);
 
     mOpenFileButton->setImages (false, true, true,
                                 ImageCache::getFromMemory (open_btn_idle_png, open_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -221,7 +221,7 @@ MainEditor::MainEditor (MainController *controller)
                                 ImageCache::getFromMemory (open_btn_press_png, open_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mRecordButton = new ImageButton (T("RecordButton")));
     mRecordButton->setButtonText (T("new button"));
-    mRecordButton->addButtonListener (this);
+    mRecordButton->addListener (this);
 
     mRecordButton->setImages (false, true, true,
                               ImageCache::getFromMemory (record_btn_idle_png, record_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -229,7 +229,7 @@ MainEditor::MainEditor (MainController *controller)
                               ImageCache::getFromMemory (record_btn_press_png, record_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton1 = new ImageButton (T("mActiveButton")));
     mActiveButton1->setButtonText (T("new button"));
-    mActiveButton1->addButtonListener (this);
+    mActiveButton1->addListener (this);
 
     mActiveButton1->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -237,7 +237,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton2 = new ImageButton (T("mActiveButton")));
     mActiveButton2->setButtonText (T("new button"));
-    mActiveButton2->addButtonListener (this);
+    mActiveButton2->addListener (this);
 
     mActiveButton2->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -245,7 +245,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton3 = new ImageButton (T("mActiveButton")));
     mActiveButton3->setButtonText (T("new button"));
-    mActiveButton3->addButtonListener (this);
+    mActiveButton3->addListener (this);
 
     mActiveButton3->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -253,7 +253,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton4 = new ImageButton (T("mActiveButton")));
     mActiveButton4->setButtonText (T("new button"));
-    mActiveButton4->addButtonListener (this);
+    mActiveButton4->addListener (this);
 
     mActiveButton4->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -261,7 +261,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton5 = new ImageButton (T("mActiveButton")));
     mActiveButton5->setButtonText (T("new button"));
-    mActiveButton5->addButtonListener (this);
+    mActiveButton5->addListener (this);
 
     mActiveButton5->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -269,7 +269,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton6 = new ImageButton (T("mActiveButton")));
     mActiveButton6->setButtonText (T("new button"));
-    mActiveButton6->addButtonListener (this);
+    mActiveButton6->addListener (this);
 
     mActiveButton6->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -277,7 +277,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton7 = new ImageButton (T("mActiveButton")));
     mActiveButton7->setButtonText (T("new button"));
-    mActiveButton7->addButtonListener (this);
+    mActiveButton7->addListener (this);
 
     mActiveButton7->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -285,7 +285,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mActiveButton8 = new ImageButton (T("mActiveButton")));
     mActiveButton8->setButtonText (T("new button"));
-    mActiveButton8->addButtonListener (this);
+    mActiveButton8->addListener (this);
 
     mActiveButton8->setImages (false, true, true,
                                ImageCache::getFromMemory (offon_mini_idle_png, offon_mini_idle_pngSize), 1.0000f, Colour (0x0),
@@ -293,7 +293,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (offon_mini_press_png, offon_mini_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton1 = new ImageButton (T("SelectButton")));
     mSelectButton1->setButtonText (T("new button"));
-    mSelectButton1->addButtonListener (this);
+    mSelectButton1->addListener (this);
 
     mSelectButton1->setImages (false, true, true,
                                ImageCache::getFromMemory (_1_btn_idle_png, _1_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -301,7 +301,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (_1_btn_press_png, _1_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton2 = new ImageButton (T("SelectButton")));
     mSelectButton2->setButtonText (T("new button"));
-    mSelectButton2->addButtonListener (this);
+    mSelectButton2->addListener (this);
 
     mSelectButton2->setImages (false, true, true,
                                ImageCache::getFromMemory (_2_btn_idle_png, _2_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -309,7 +309,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (_2_btn_press_png, _2_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton3 = new ImageButton (T("SelectButton")));
     mSelectButton3->setButtonText (T("new button"));
-    mSelectButton3->addButtonListener (this);
+    mSelectButton3->addListener (this);
 
     mSelectButton3->setImages (false, true, true,
                                ImageCache::getFromMemory (_3_btn_idle_png, _3_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -317,7 +317,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (_3_btn_press_png, _3_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton4 = new ImageButton (T("SelectButton")));
     mSelectButton4->setButtonText (T("new button"));
-    mSelectButton4->addButtonListener (this);
+    mSelectButton4->addListener (this);
 
     mSelectButton4->setImages (false, true, true,
                                ImageCache::getFromMemory (_4_btn_idle_png, _4_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -325,7 +325,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (_4_btn_press_png, _4_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton5 = new ImageButton (T("SelectButton")));
     mSelectButton5->setButtonText (T("new button"));
-    mSelectButton5->addButtonListener (this);
+    mSelectButton5->addListener (this);
 
     mSelectButton5->setImages (false, true, true,
                                ImageCache::getFromMemory (_5_btn_idle_png, _5_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -333,7 +333,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (_5_btn_press_png, _5_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton6 = new ImageButton (T("SelectButton")));
     mSelectButton6->setButtonText (T("new button"));
-    mSelectButton6->addButtonListener (this);
+    mSelectButton6->addListener (this);
 
     mSelectButton6->setImages (false, true, true,
                                ImageCache::getFromMemory (_6_btn_idle_png, _6_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -341,7 +341,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (_6_btn_press_png, _6_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton7 = new ImageButton (T("SelectButton")));
     mSelectButton7->setButtonText (T("new button"));
-    mSelectButton7->addButtonListener (this);
+    mSelectButton7->addListener (this);
 
     mSelectButton7->setImages (false, true, true,
                                ImageCache::getFromMemory (_7_btn_idle_png, _7_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -349,7 +349,7 @@ MainEditor::MainEditor (MainController *controller)
                                ImageCache::getFromMemory (_7_btn_press_png, _7_btn_press_pngSize), 1.0000f, Colour (0x0));
     addAndMakeVisible (mSelectButton8 = new ImageButton (T("SelectButton")));
     mSelectButton8->setButtonText (T("new button"));
-    mSelectButton8->addButtonListener (this);
+    mSelectButton8->addListener (this);
 
     mSelectButton8->setImages (false, true, true,
                                ImageCache::getFromMemory (_8_btn_idle_png, _8_btn_idle_pngSize), 1.0000f, Colour (0x0),
@@ -430,7 +430,6 @@ MainEditor::~MainEditor()
     deleteAndZero (mSelectButton6);
     deleteAndZero (mSelectButton7);
     deleteAndZero (mSelectButton8);
-    ImageCache::release (cachedImage_granularbackdropcropped_png);
 
     //[Destructor]. You can add your own custom destruction code here..
 	deleteAndZero (mWaveformView);
@@ -448,7 +447,7 @@ void MainEditor::paint (Graphics& g)
     g.setColour (Colours::black);
     g.drawImage (cachedImage_granularbackdropcropped_png,
                  0, 0, 1024, 768,
-                 0, 0, cachedImage_granularbackdropcropped_png->getWidth(), cachedImage_granularbackdropcropped_png->getHeight());
+                 0, 0, cachedImage_granularbackdropcropped_png.getWidth(), cachedImage_granularbackdropcropped_png.getHeight());
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]

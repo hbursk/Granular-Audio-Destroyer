@@ -32,7 +32,7 @@ public:
 	 void setFile (const File& file);
 	 void setZoomFactor (double amount);
 	 void paint (Graphics& g);
-	 virtual void changeListenerCallback (void* objectThatHasChanged);
+	 virtual void changeListenerCallback (ChangeBroadcaster* source);
 	 virtual bool isInterestedInFileDrag (const StringArray& /*files*/);
 	 virtual void filesDropped (const StringArray& files, int /*x*/, int /*y*/);
 	 

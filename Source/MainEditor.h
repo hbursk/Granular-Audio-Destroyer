@@ -39,6 +39,7 @@ class MainController;
                                                                     //[/Comments]
 */
 class MainEditor  : public Component,
+					public MessageListener,
                     public SliderListener,
                     public ButtonListener
 {
@@ -128,7 +129,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	//friend class MainController;
-	friend class MainController;
+	//friend class MainController;
 	MainController *mMessageListener;
 	WaveformView *mWaveformView;
     //[/UserVariables]
@@ -166,7 +167,7 @@ private:
     ImageButton* mSelectButton6;
     ImageButton* mSelectButton7;
     ImageButton* mSelectButton8;
-    Image* cachedImage_granularbackdropcropped_png;
+    Image cachedImage_granularbackdropcropped_png;
 
     //==============================================================================
     // (prevent copy constructor and operator= being generated..)

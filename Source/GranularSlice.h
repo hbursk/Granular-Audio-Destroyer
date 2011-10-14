@@ -7,7 +7,7 @@
  *
  */
  #include "../JuceLibraryCode/JuceHeader.h"
-
+ #include "Dirac.h"
 
 class GranularSlice
 {
@@ -49,6 +49,8 @@ public:
 	int64 getDataLengthPerChannel();
 
 	bool renderAudioBlock(float** outputData, int numChannels, int numSamples);
+	
+	long diracReadCallback(float **data, long numFrames, void *userData);
 
 private:
 	float mGain;
@@ -56,7 +58,7 @@ private:
 	float mPanLeft;
 	float mPanRight;
 	float mPanGain[2];
-	
+	float mPitchFactor;
 	int64 mGrainLength;
 	int64 mGrainStartPositionAbsolute;
 
@@ -81,4 +83,10 @@ private:
 	int	   mNumChannels;
 	int64  mDataLengthPerChannel;
 	int64  mGrainAdvancePosition[2];
+	
+	void*  mDiracLeftChannel;
+	void*  mDiracRightChannel;
+	float* mGrainRenderedDataLeft;
+	float* mGrainRenderedDataRight;
+	
 };
