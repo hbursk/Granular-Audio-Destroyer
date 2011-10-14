@@ -264,10 +264,14 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 
 			sample = mData[i][samppos] * mGain * mPanGain[i];
 
-			if (abs(mGrainCurrentPositionRelative[i] < kSampleRamp))
-				sample *= mGrainCurrentPositionRelative[i] / (float)(kSampleRamp);
-			else if (abs(mGrainCurrentPositionRelative[i]) >= mGrainLength - kSampleRamp)
-				sample *= (mGrainLength - mGrainCurrentPositionRelative[i]) / (float)(kSampleRamp);
+			// TODO: fix logic for ramping at start and end of grain slices if it is reversed
+			// Doing it during reversed grains causes distortion and gain to be amplified too much
+			if (!mReversed) {
+				if (abs(mGrainCurrentPositionRelative[i] < kSampleRamp))
+					sample *= mGrainCurrentPositionRelative[i] / (float)(kSampleRamp);
+				else if (abs(mGrainCurrentPositionRelative[i]) >= mGrainLength - kSampleRamp)
+					sample *= (mGrainLength - mGrainCurrentPositionRelative[i]) / (float)(kSampleRamp);
+			}
 
 			output[j] += sample;
 
