@@ -11,6 +11,7 @@
 #include <math.h>
 
 #define RAND_WEIGHT(a) (rand() % a + 1)
+#define BUFFER_SIZE 8192
 
 const int kGrainLength = 44100;
 const float kVelocityFactor = 1.0f;
@@ -21,7 +22,9 @@ const int kGrainRandPosition = 20000;
 
 GranularSlice::GranularSlice (float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels, bool reset)
 	: mLeftChannelData (leftchanneldata),
-	  mRightChannelData (rightchanneldata)
+	  mRightChannelData (rightchanneldata),
+	  mGrainRenderedDataLeft(0),
+	  mGrainRenderedDataRight(0)
 {	
 	if (reset)
 		resetDefaults();
@@ -30,12 +33,21 @@ GranularSlice::GranularSlice (float* leftchanneldata, float* rightchanneldata, i
 
 	mData[0] = mLeftChannelData;
 	mData[1] = mRightChannelData;
+	if (mGrainRenderedDataLeft == 0)
+	{
+		mGrainRenderedDataLeft = (float*)malloc(BUFFER_SIZE*sizeof(float));
+		mGrainRenderedDataRight = (float*)malloc(BUFFER_SIZE*sizeof(float));
+	}
 
 }
 
 GranularSlice::~GranularSlice ()
 {
-
+	if (mGrainRenderedDataLeft != 0)
+	{
+		free(mGrainRenderedDataLeft);
+		free(mGrainRenderedDataRight);
+	}
 }
 
 void GranularSlice::resetDefaults()
@@ -67,6 +79,7 @@ void GranularSlice::resetDefaults()
 	mReversed = false;
 	mGrainAdvancePosition[0] = 0;
 	mGrainAdvancePosition[1] = 0;
+	mPitchFactor = 1.0f;
 }
 
 void GranularSlice::setData(float* leftchanneldata, float* rightchanneldata, int64 datalength, int numchannels, bool reset)
@@ -293,4 +306,11 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 	}
 
 	return false;
+}
+
+long GranularSlice::diracReadCallback(float **data, long numFrames, void *userData)
+{
+	//needs to fill data with the granular slice output.  Will be read with inconsistent numFrames but will be consecutive.
+	
+	return 0;
 }

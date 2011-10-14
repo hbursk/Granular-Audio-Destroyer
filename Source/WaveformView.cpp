@@ -55,15 +55,7 @@ void WaveformView::paint (Graphics& g)
 
 	if (mThumbnail.getTotalLength() > 0)
 	{
-		int heightPerChannel = (getHeight() - 4) / mThumbnail.getNumChannels();
-
-		for (int i = 0; i < mThumbnail.getNumChannels(); ++i)
-		{
-			mThumbnail.drawChannel (g, 2, 2 + heightPerChannel * i,
-								   getWidth() - 4, heightPerChannel,
-								   mStartTime, mEndTime,
-								   i, 1.0f);
-		}	
+		mThumbnail.drawChannels (g, getLocalBounds().reduced (2, 2), mStartTime, mEndTime, 1.0f);
 	}
 	else
 	{
@@ -73,7 +65,7 @@ void WaveformView::paint (Graphics& g)
 	}
 }
 
-void WaveformView::changeListenerCallback (void* objectThatHasChanged)
+void WaveformView::changeListenerCallback (ChangeBroadcaster* source)
 {
 	// this method is called by the thumbnail when it has changed, so we should repaint it..
 	repaint();
