@@ -52,7 +52,7 @@ GranularSlice::~GranularSlice ()
 
 void GranularSlice::resetDefaults()
 {
-	mGain = 1.0f;
+	mGain = 1.0f / NUM_GRAINS;
 	mPan = 0.5f;//center
 	mPanLeft = 1.0f;//(float)cos(pan*PI/2);
 	mPanRight = 1.0f;//(float)sin(pan*PI/2);	

@@ -29,8 +29,6 @@
 #include "AudioRecorder.h"
 //[/Headers]
 
-#define NUM_GRAINS 8
-
 //==============================================================================
 /**
                                                                     //[Comments]

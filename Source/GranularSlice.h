@@ -9,6 +9,8 @@
  #include "../JuceLibraryCode/JuceHeader.h"
  #include "Dirac.h"
 
+#define NUM_GRAINS 8
+
 class GranularSlice
 {
 public:
