@@ -283,10 +283,13 @@ bool GranularSlice::renderAudioBlock (float** outputData, int numChannels, int n
 			sample = mData[i][samppos] * mGain * mPanGain[i];
 
 			// Apply windowing, works for both reverse and forward grain playback
-			if (abs(mGrainCurrentPositionRelative[i]) < kSampleRamp)
-				sample *= mGrainCurrentPositionRelative[i] / (float)(kSampleRamp);
-			else if (abs(mGrainCurrentPositionRelative[i]) >= mGrainLength - kSampleRamp)
-				sample *= (mGrainLength - abs(mGrainCurrentPositionRelative[i])) / (float)(kSampleRamp);
+			// start of window is non zero, end of window is zero
+			if (abs(mGrainCurrentPositionRelative[i]) < kSampleRamp) {
+				sample *= (mGrainCurrentPositionRelative[i] + 1) / (float)(kSampleRamp);
+			}
+			else if (abs(mGrainCurrentPositionRelative[i]) >= (mGrainLength - kSampleRamp)) {
+				sample *= (mGrainLength - abs(mGrainCurrentPositionRelative[i]) + 1) / (float)(kSampleRamp);
+			}
 
 			output[j] += sample;
 
